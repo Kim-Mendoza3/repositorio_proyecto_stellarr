@@ -158,7 +158,7 @@ Esta plataforma descentralizada **conecta estudiantes y patrocinadores** mediant
 
 ## 📎 Recursos y Enlaces
 
-* **Repositorio GitHub:** *[]*
+* **Repositorio GitHub:** *[https://github.com/Kim-Mendoza3/Repositorio_Proyecto_Stellar]*
 * **Plantillas de Issues:** `issue: contrato-base`, `issue: ui-prototipo`, `issue: pruebas-integracion`.
 * **Tecnologías clave:** Soroban, Rust, React, TailwindCSS, Metamask Testnet.
 
