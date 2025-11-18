@@ -1,68 +1,95 @@
 "use client";
 
-import React, { useState } from "react";
-import SorobanPasskeyApp from "@/components/SorobanPasskeyApp";
-import CreditScoringFlow from "@/components/CreditScoringFlow";
-
-type AppMode = 'home' | 'passkey' | 'credit';
+import React from "react";
+import HeroCarousel from "@/components/HeroCarousel";
 
 export default function Home() {
-  const [currentMode, setCurrentMode] = useState<AppMode>('home');
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-teal-900 to-blue-900">
-      <nav className="relative z-10 px-6 pt-6">
+    <main className="min-h-screen bg-gradient-to-b from-slate-900 via-indigo-900 to-sky-900 text-white">
+      <nav className="relative z-20 px-6 py-6">
         <div className="mx-auto max-w-7xl flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">✈️</span>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-xl">
+              <span className="text-2xl">✈️</span>
             </div>
-            <span className="text-white font-bold text-xl">StudyTrips Global</span>
+            <div>
+              <div className="text-xl font-extrabold tracking-tight">StudyTrips Global</div>
+              <div className="text-sm text-amber-200/70">Financia tu experiencia internacional con confianza</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <a href="/register" className="hidden md:inline-block px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-900 font-semibold rounded-lg shadow">Registro</a>
+            <a href="/login" className="px-4 py-2 border border-white/20 hover:bg-white/5 rounded-lg">Login</a>
           </div>
         </div>
       </nav>
 
-      <div className="relative z-10 px-6 pt-20 pb-16">
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            StudyTrips Global
-          </h1>
-          <p className="text-xl md:text-2xl text-blue-100 max-w-2xl mx-auto leading-relaxed mb-12">
-            Financia tus viajes de estudio con seguridad blockchain. Autenticación biométrica, pagos en criptomonedas y acceso global para estudiantes.
-          </p>
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 mt-8">
-            <h2 className="text-2xl font-bold text-white mb-4">Características</h2>
-            <ul className="text-left text-blue-100 text-lg space-y-2 mx-auto max-w-xl mb-8">
-              <li>✅ Financiamiento de viajes de estudio aprobado en minutos</li>
-              <li>✅ Algoritmo inteligente de evaluación de crédito</li>
-              <li>✅ Contratos inteligentes en Soroban (Stellar testnet)</li>
-              <li>✅ Autenticación segura con Passkey/WebAuthn</li>
-              <li>✅ Privacidad garantizada: datos nunca salen de tu dispositivo</li>
-              <li>✅ Interfaz moderna y responsiva</li>
-            </ul>
-            <div className="flex flex-col md:flex-row gap-4 justify-center mt-4">
-              <a
-                href="/register"
-                className="px-6 py-3 bg-gradient-to-r from-teal-600 to-green-600 hover:from-teal-500 hover:to-green-500 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg text-lg"
-              >
-                Registro
-              </a>
-              <a
-                href="/login"
-                className="px-6 py-3 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg text-lg"
-              >
-                Login
-              </a>
+      <section className="relative z-10 px-6 py-20">
+        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Viajes de estudio sin barreras. Financiamiento rápido y seguro.</h1>
+            <p className="text-lg text-sky-100/90 mb-8">Autenticación biométrica con Passkeys, contratos inteligentes en Soroban y un sistema de scoring que aprueba solicitudes en minutos.</p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+              <div className="flex items-start gap-3">
+                <div className="p-3 bg-white/10 rounded-lg shadow inner-border">
+                  <svg className="w-6 h-6 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.5 0-3 .9-3 2v4"/></svg>
+                </div>
+                <div>
+                  <div className="font-semibold">Aprobación en minutos</div>
+                  <div className="text-sm text-sky-100/80">Solicitudes rápidas con validación automática.</div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="p-3 bg-white/10 rounded-lg shadow inner-border">
+                  <svg className="w-6 h-6 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3"/></svg>
+                </div>
+                <div>
+                  <div className="font-semibold">Scoring inteligente</div>
+                  <div className="text-sm text-sky-100/80">Modelo que combina datos y contexto para decisiones justas.</div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="p-3 bg-white/10 rounded-lg shadow inner-border">
+                  <svg className="w-6 h-6 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0-1.657 2.686-3 6-3s6 1.343 6 3v2"/></svg>
+                </div>
+                <div>
+                  <div className="font-semibold">Contratos Soroban</div>
+                  <div className="text-sm text-sky-100/80">Transparencia y ejecución segura en Stellar testnet.</div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="p-3 bg-white/10 rounded-lg shadow inner-border">
+                  <svg className="w-6 h-6 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c-1.657 0-3 1.343-3 3v5h6v-5c0-1.657-1.343-3-3-3z"/></svg>
+                </div>
+                <div>
+                  <div className="font-semibold">Passkey/WebAuthn</div>
+                  <div className="text-sm text-sky-100/80">Inicio de sesión sin contraseñas, más seguro y fácil.</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <a href="/register" className="px-6 py-3 bg-amber-400 text-slate-900 font-semibold rounded-lg shadow hover:scale-105 transition">Comenzar</a>
+              <a href="/login" className="px-6 py-3 border border-white/20 rounded-lg hover:bg-white/5">Iniciar sesión</a>
+            </div>
+          </div>
+
+          <div className="relative flex items-center justify-center">
+            <div className="w-full h-[420px] md:h-[560px] rounded-3xl shadow-2xl overflow-hidden">
+              <HeroCarousel />
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-teal-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-500"></div>
+      <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
+        <div className="absolute top-10 left-10 w-72 h-72 bg-amber-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl" />
       </div>
-    </div>
+    </main>
   );
 }
