@@ -4,9 +4,10 @@ import React from 'react';
 
 interface LandingPageProps {
   onStartSession: () => void;
+  partnerName?: string;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onStartSession }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onStartSession, partnerName }) => {
   return (
   <div 
     className="min-h-screen relative bg-cover bg-center"
@@ -32,6 +33,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartSession }) => {
       {/* Hero Section */}
       <div className="relative z-10 px-6 pt-20 pb-16">
         <div className="mx-auto max-w-4xl text-center">
+          {/* Partner Badge */}
+          {partnerName && (
+            <div className="mb-6 inline-block bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-2 rounded-full text-white font-bold shadow-lg">
+              💼 Financiado por {partnerName}
+            </div>
+          )}
+
           {/* Main Headline */}
           <div className="mb-8">
             <div className="text-6xl mb-4">🎒</div>

@@ -2,31 +2,22 @@
 
 import React, { useState, useEffect } from 'react';
 import LandingPage from './LandingPage';
-import IncomeDashboard from './IncomeDashboard';
-import CreditProfile from './CreditProfile';
-import SuccessNotification from './SuccessNotification';
+import TravelPackages, { TravelPackage } from './TravelPackages';
+import ProcessingScreen from './ProcessingScreen';
+import CompletionScreen from './CompletionScreen';
+import PartnerCompanies from './PartnerCompanies';
 import { SessionManager } from '@/lib/session';
 
-type FlowStep = 'landing' | 'income' | 'credit' | 'success';
+type FlowStep = 'landing' | 'packages' | 'processing' | 'completion' | 'partners';
 
-interface IncomeData {
-  monthly_earnings: number[];
-  gig_platforms: string[];
-  average_hours_per_week: number;
-  years_experience: number;
-  education_level: 'high_school' | 'bachelor' | 'master' | 'phd' | 'none';
-  employment_type: 'full_time_gig' | 'part_time_gig' | 'mixed' | 'unemployed';
-  bank_account_age_months: number;
-  has_savings: boolean;
-  debt_to_income_ratio: number;
+interface CreditScoringFlowProps {
+  partnerName?: string;
 }
 
-const CreditScoringFlow: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<FlowStep>('landing');
-  const [incomeData, setIncomeData] = useState<IncomeData | null>(null);
-  const [selectedLoanAmount, setSelectedLoanAmount] = useState<number>(0);
-  
-  // Get REAL wallet address from authenticated session
+const CreditScoringFlow: React.FC<CreditScoringFlowProps> = ({ partnerName }) => {
+  const [currentStep, setCurrentStep] = useState<FlowStep>(partnerName ? 'landing' : 'partners');
+  const [selectedPartner, setSelectedPartner] = useState<string>(partnerName || '');
+  const [selectedPackage, setSelectedPackage] = useState<TravelPackage | null>(null);
   const [userAddress, setUserAddress] = useState<string>('');
 
   useEffect(() => {
@@ -37,73 +28,76 @@ const CreditScoringFlow: React.FC = () => {
       console.log('✅ Using authenticated wallet:', address);
     } else {
       console.warn('⚠️ No authenticated wallet found, using fallback');
-      // Fallback to funded testnet address if no session (for testing)
       setUserAddress('GDJYLRW4DZK7LVGCNAKBO42FGWVDRP2G7BEAXWWUC5E63ZENZ3RAPAKL');
     }
   }, []);
 
+  const handleSelectPartner = (partnerId: string) => {
+    setSelectedPartner(partnerId);
+    setCurrentStep('landing');
+  };
+
   const handleStartSession = () => {
-    setCurrentStep('income');
+    setCurrentStep('packages');
   };
 
-  const handleIncomeDataReady = (data: IncomeData) => {
-    setIncomeData(data);
+  const handleSelectPackage = (pkg: TravelPackage) => {
+    setSelectedPackage(pkg);
+    setCurrentStep('processing');
   };
 
-  const handleIncomeNext = () => {
-    if (incomeData) {
-      setCurrentStep('credit');
-    }
+  const handleProcessingComplete = () => {
+    setCurrentStep('completion');
   };
 
-  const handleRequestLoan = (amount: number) => {
-    setSelectedLoanAmount(amount);
-    setCurrentStep('success');
+  const handleBackToPartners = () => {
+    setCurrentStep('partners');
   };
 
-  const handleBackToIncome = () => {
-    setCurrentStep('income');
+  const handleBackToPackages = () => {
+    setCurrentStep('packages');
   };
 
   const handleStartOver = () => {
-    setCurrentStep('landing');
-    setIncomeData(null);
-    setSelectedLoanAmount(0);
-  };
-
-  const handleViewDashboard = () => {
-    // In real app, this would navigate to a user dashboard
-    // For MVP, let's go back to credit profile
-    setCurrentStep('credit');
+    setCurrentStep('partners');
+    setSelectedPartner('');
+    setSelectedPackage(null);
   };
 
   return (
     <div className="min-h-screen">
-      {currentStep === 'landing' && (
-        <LandingPage onStartSession={handleStartSession} />
+      {currentStep === 'partners' && (
+        <PartnerCompanies />
       )}
       
-      {currentStep === 'income' && (
-        <IncomeDashboard
-          onDataReady={handleIncomeDataReady}
-          onNext={handleIncomeNext}
+      {currentStep === 'landing' && selectedPartner && (
+        <LandingPage onStartSession={handleStartSession} partnerName={selectedPartner} />
+      )}
+      
+      {currentStep === 'packages' && (
+        <TravelPackages
+          incomeData={{} as any}
+          onSelectPackage={handleSelectPackage}
+          onBack={handleBackToPartners}
         />
       )}
       
-      {currentStep === 'credit' && incomeData && (
-        <CreditProfile
-          incomeData={incomeData}
-          onRequestLoan={handleRequestLoan}
-          onBack={handleBackToIncome}
+      {currentStep === 'processing' && selectedPackage && (
+        <ProcessingScreen
+          packageName={selectedPackage.name}
+          companyName={selectedPartner}
+          onComplete={handleProcessingComplete}
         />
       )}
       
-            {currentStep === 'success' && (
-        <SuccessNotification
-          loanAmount={selectedLoanAmount}
+      {currentStep === 'completion' && selectedPackage && (
+        <CompletionScreen
+          packageName={selectedPackage.name}
+          companyName={selectedPartner}
+          totalCost={selectedPackage.price}
+          monthlyPayment={selectedPackage.monthlyPayment}
+          loanTerm={selectedPackage.loanTerm}
           userAddress={userAddress}
-          onStartOver={handleStartOver}
-          onViewDashboard={handleViewDashboard}
         />
       )}
     </div>
