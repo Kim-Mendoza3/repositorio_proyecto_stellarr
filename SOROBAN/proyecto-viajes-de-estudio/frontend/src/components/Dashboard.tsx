@@ -1,6 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { WalletPaymentProcessor } from './WalletPaymentProcessor';
+import type { WalletType } from '@/hooks/useWalletAuth';
 
 interface PasskeyData {
   credentialId: string;
@@ -11,13 +13,27 @@ interface PasskeyData {
 }
 
 interface DashboardProps {
-  passkeyData: PasskeyData;
+  passkeyData?: PasskeyData;
   onLogout: () => void;
   onAuthenticate?: () => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenticate }) => {
   const [copied, setCopied] = useState<string | null>(null);
+  const [userAddress, setUserAddress] = useState<string | null>(null);
+  const [walletType, setWalletType] = useState<WalletType | null>(null);
+  const [showPayment, setShowPayment] = useState(false);
+  const [selectedTrip, setSelectedTrip] = useState<any | null>(null);
+
+  useEffect(() => {
+    // Cargar datos de localStorage para wallet
+    const address = localStorage.getItem('userAddress');
+    const wallet = localStorage.getItem('userWalletType') as WalletType | null;
+    if (address && wallet) {
+      setUserAddress(address);
+      setWalletType(wallet);
+    }
+  }, []);
 
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -28,6 +44,12 @@ const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenti
   const shortenString = (str: string, length: number = 20) => {
     if (str.length <= length) return str;
     return `${str.slice(0, length / 2)}...${str.slice(-length / 2)}`;
+  };
+
+  const handlePaymentSuccess = (transactionId: string) => {
+    alert(`¡Pago exitoso! ID: ${transactionId}`);
+    setShowPayment(false);
+    setSelectedTrip(null);
   };
 
   return (
@@ -82,8 +104,8 @@ const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenti
             </p>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
+          {/* Stats Cards - Wallet Info */}
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
@@ -125,7 +147,53 @@ const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenti
                 </div>
               </div>
             </div>
+
+            {userAddress && walletType && (
+              <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 backdrop-blur-sm rounded-2xl p-6 border border-cyan-500/50">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center">
+                    <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold">Wallet</h3>
+                    <p className="text-cyan-400 text-sm capitalize">{walletType}</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Wallet Connection Info */}
+          {userAddress && walletType && (
+            <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-md rounded-2xl p-6 border border-cyan-500/50 mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-white">Información del Wallet</h2>
+                <span className="text-xs bg-cyan-500/30 text-cyan-200 px-3 py-1 rounded-full font-semibold">
+                  {walletType.toUpperCase()}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-gray-300 text-sm mb-2">Dirección Conectada:</p>
+                  <div className="flex items-center space-x-2">
+                    <p className="text-white font-mono text-sm break-all">{shortenString(userAddress, 40)}</p>
+                    <button
+                      onClick={() => copyToClipboard(userAddress, 'address')}
+                      className="text-cyan-400 hover:text-cyan-300 text-xs"
+                    >
+                      {copied === 'address' ? '✓ Copiado' : 'Copiar'}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-gray-300 text-sm mb-2">Red Blockchain:</p>
+                  <p className="text-white font-semibold capitalize">{walletType === 'stellar' ? 'Stellar Testnet' : walletType}</p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Main Dashboard Grid */}
           <div className="grid lg:grid-cols-2 gap-8">
@@ -227,12 +295,48 @@ const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenti
                 <svg className="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                <span>Mi Solicitud de Viaje</span>
+                <span>Acciones Disponibles</span>
               </h2>
 
               <div className="space-y-4">
+                {/* Payment Section */}
+                {userAddress && walletType && !showPayment && (
+                  <button
+                    onClick={() => setShowPayment(true)}
+                    className="w-full group relative px-6 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-3"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>💳 Realizar Pago con Wallet</span>
+                  </button>
+                )}
+
+                {/* Show Payment Processor */}
+                {showPayment && userAddress && walletType && (
+                  <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-md rounded-xl p-4 border border-slate-700/50">
+                    <button
+                      onClick={() => setShowPayment(false)}
+                      className="mb-4 text-gray-400 hover:text-white font-semibold text-sm"
+                    >
+                      ← Volver
+                    </button>
+                    <WalletPaymentProcessor
+                      walletAddress={userAddress}
+                      walletType={walletType}
+                      paymentData={{
+                        amount: 2500,
+                        currency: 'MXN',
+                        description: 'Pago de viaje de estudio',
+                        studentId: userAddress,
+                      }}
+                      onSuccess={handlePaymentSuccess}
+                    />
+                  </div>
+                )}
+
                 {/* Authenticate Button */}
-                {onAuthenticate && (
+                {onAuthenticate && !userAddress && (
                   <button
                     onClick={onAuthenticate}
                     className="w-full group relative px-6 py-4 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-gray-900 font-bold rounded-xl shadow-lg transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-3"
@@ -266,13 +370,29 @@ const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenti
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <div>
-                        <h4 className="text-green-300 font-medium text-sm">Sesión Segura</h4>
+                        <h4 className="text-green-300 font-medium text-sm">Transacciones Blockchain</h4>
                         <p className="text-gray-300 text-sm mt-1">
-                          Tu sesión se mantiene activa y encriptada en este dispositivo.
+                          Todos los pagos se registran en Stellar Testnet de forma inmutable.
                         </p>
                       </div>
                     </div>
                   </div>
+
+                  {userAddress && (
+                    <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <svg className="w-5 h-5 text-cyan-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        <div>
+                          <h4 className="text-cyan-300 font-medium text-sm">Wallet Conectado</h4>
+                          <p className="text-gray-300 text-sm mt-1">
+                            Puedes pagar directamente desde tu cartera de {walletType}.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* EBAS Button */}
                   <a
@@ -281,7 +401,7 @@ const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenti
                   >
                     <div className="text-2xl mb-2">🌍</div>
                     <h4 className="text-gray-900 font-bold text-lg mb-1">Mi Solicitud de Financiamiento</h4>
-                    <p className="text-white text-sm">
+                    <p className="text-gray-900 text-sm font-medium">
                       Gestiona tu solicitud de financiamiento para viajes de estudio
                     </p>
                   </a>

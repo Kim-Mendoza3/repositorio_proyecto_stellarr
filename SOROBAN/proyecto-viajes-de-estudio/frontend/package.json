@@ -13,16 +13,22 @@
   "dependencies": {
     "@capacitor/core": "^5.7.8",
     "@darkedges/capacitor-native-webauthn": "^0.0.4",
+    "@rainbow-me/rainbowkit": "^2.2.9",
     "@simplewebauthn/browser": "^13.2.0",
     "@simplewebauthn/types": "^12.0.0",
     "@stellar/stellar-sdk": "^12.3.0",
+    "@tanstack/react-query": "^5.90.10",
     "base64url": "^3.0.1",
     "bigint-conversion": "^2.4.3",
     "cbor-x": "^1.6.0",
+    "ethers": "^6.15.0",
     "lucide-react": "^0.545.0",
     "next": "14.2.15",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "stellar-sdk": "^13.3.0",
+    "viem": "^2.39.3",
+    "wagmi": "^3.0.1",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
