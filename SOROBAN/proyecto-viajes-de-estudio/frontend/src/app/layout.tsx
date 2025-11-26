@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { WalletProvider } from "@/contexts/WalletContext";
+import FreighterSetupBanner from "@/components/FreighterSetupBanner";
 
 export const metadata: Metadata = {
   title: "StudyTrips Global - Financiamiento de viajes de estudio",
@@ -14,6 +16,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isDev = process.env.NODE_ENV === 'development';
+
   return (
     <html lang="es">
       <head>
@@ -23,7 +27,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body className="antialiased min-h-screen font-sans">
-        {children}
+        <WalletProvider>
+          {isDev && <FreighterSetupBanner />}
+          <div className={isDev ? "pt-32" : ""}>
+            {children}
+          </div>
+        </WalletProvider>
       </body>
     </html>
   );

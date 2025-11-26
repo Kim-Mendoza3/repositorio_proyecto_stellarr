@@ -12,7 +12,8 @@ module.exports = {
         foreground: 'var(--foreground)',
         primary: 'var(--primary)',
         accent: 'var(--accent)',
-        muted: 'var(--muted)'
+        muted: 'var(--muted)',
+        stellar: '#1a9fc9'
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

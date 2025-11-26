@@ -1,184 +1,215 @@
-/**
- * useWalletAuth.ts
- * Hook for wallet authentication and payment
- */
-
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import StellarSDK from '@stellar/js-sdk';
 
-export interface WalletConnection {
+export interface WalletSession {
   address: string;
-  walletType: WalletType;
+  balance: string;
   isConnected: boolean;
-  balance?: string;
-  network?: string;
+  network: string;
 }
 
-export type WalletType = 
-  | 'metamask' 
-  | 'stellar' 
-  | 'ledger' 
-  | 'mercadopago' 
-  | 'coinbase'
-  | 'walletconnect';
+export interface TransactionRecord {
+  id: string;
+  hash: string;
+  trip: string;
+  amount: string;
+  timestamp: number;
+  status: 'pending' | 'completed' | 'failed';
+  explorerUrl?: string;
+}
 
 export const useWalletAuth = () => {
-  const [wallet, setWallet] = useState<WalletConnection | null>(null);
+  const [wallet, setWallet] = useState<WalletSession | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [freighterReady, setFreighterReady] = useState(false);
 
-  // Conectar Metamask
-  const connectMetamask = useCallback(async () => {
+  // Configuración Stellar Testnet
+  const server = new StellarSDK.Horizon.Server('https://horizon-testnet.stellar.org');
+  const networkPassphrase = StellarSDK.Networks.TESTNET_NETWORK_PASSPHRASE;
+
+  // Detectar Freighter disponible
+  useEffect(() => {
+    const checkFreighter = async () => {
+      if (typeof window === 'undefined') return;
+
+      for (let i = 0; i < 15; i++) {
+        if ((window as any).freighter) {
+          setFreighterReady(true);
+          return;
+        }
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+      setFreighterReady(false);
+    };
+
+    checkFreighter();
+  }, []);
+
+  // Conectar con Freighter
+  const connectWallet = useCallback(async () => {
     setIsLoading(true);
     setError(null);
+
     try {
-      if (typeof window === 'undefined' || !(window as any).ethereum) {
-        throw new Error('MetaMask no está instalado');
+      if (typeof window === 'undefined') {
+        throw new Error('Cliente-side solo');
       }
 
-      const accounts = await (window as any).ethereum.request({
-        method: 'eth_requestAccounts',
-      });
-
-      const address = accounts[0];
-      const network = await (window as any).ethereum.request({
-        method: 'eth_chainId',
-      });
-
-      setWallet({
-        address,
-        walletType: 'metamask',
-        isConnected: true,
-        network,
-      });
-
-      return { address, walletType: 'metamask' };
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // Conectar Stellar
-  const connectStellar = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      if (typeof window === 'undefined' || !(window as any).stellar) {
-        throw new Error('Stellar Wallet no está instalado');
+      if (!(window as any).freighter) {
+        throw new Error('Freighter Wallet no está instalada. Descargala desde freighter.app');
       }
 
-      const result = await (window as any).stellar.getPublicKey();
-      
-      setWallet({
-        address: result,
-        walletType: 'stellar',
-        isConnected: true,
-        network: 'Stellar',
-      });
+      // Obtener clave pública
+      const publicKey = await (window as any).freighter.getPublicKey();
+      if (!publicKey) throw new Error('No se pudo obtener la clave pública');
 
-      return { address: result, walletType: 'stellar' };
+      // Obtener saldo de Horizon
+      const account = await server.loadAccount(publicKey);
+      const balance = account.balances
+        .find((b: any) => b.asset_type === 'native')
+        ?.balance || '0';
+
+      const session: WalletSession = {
+        address: publicKey,
+        balance,
+        isConnected: true,
+        network: 'Stellar Testnet',
+      };
+
+      setWallet(session);
+      localStorage.setItem('wallet_session', JSON.stringify(session));
+
+      return session;
     } catch (err: any) {
-      setError(err.message);
+      const message = err.message || 'Error conectando wallet';
+      setError(message);
       throw err;
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  // Conectar Coinbase Wallet
-  const connectCoinbase = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      if (typeof window === 'undefined' || !(window as any).coinbaseWalletExtension) {
-        throw new Error('Coinbase Wallet no está instalado');
+  // Pagar por viaje
+  const payForTrip = useCallback(
+    async (tripName: string, amountXLM: string, destinationAddress: string) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        if (!wallet?.address) {
+          throw new Error('Wallet no conectada');
+        }
+
+        // Cargar cuenta
+        const account = await server.loadAccount(wallet.address);
+
+        // Crear transacción
+        const transaction = new StellarSDK.TransactionBuilder(account, {
+          fee: StellarSDK.BASE_FEE,
+          networkPassphrase,
+        })
+          .addMemo(StellarSDK.Memo.text(`Viaje: ${tripName}`))
+          .addOperation(
+            StellarSDK.Operation.payment({
+              destination: destinationAddress,
+              asset: StellarSDK.Asset.native(),
+              amount: amountXLM,
+            })
+          )
+          .setTimeout(300)
+          .build();
+
+        // Firmar con Freighter
+        if (!(window as any).freighter) {
+          throw new Error('Freighter no disponible');
+        }
+
+        const signed = await (window as any).freighter.signTransaction(
+          transaction.toEnvelope().toXDR(),
+          networkPassphrase
+        );
+
+        // Enviar a Testnet
+        const envelope = StellarSDK.TransactionEnvelope.fromXDR(
+          signed,
+          networkPassphrase
+        );
+        const result = await server.submitTransaction(envelope);
+
+        // Guardar en localStorage
+        const txRecord: TransactionRecord = {
+          id: `tx_${Date.now()}`,
+          hash: result.hash,
+          trip: tripName,
+          amount: amountXLM,
+          timestamp: Date.now(),
+          status: 'completed',
+          explorerUrl: `https://stellar.expert/explorer/testnet/tx/${result.hash}`,
+        };
+
+        const history = JSON.parse(localStorage.getItem('tx_history') || '[]');
+        history.push(txRecord);
+        localStorage.setItem('tx_history', JSON.stringify(history));
+
+        // Actualizar balance
+        const updated = await server.loadAccount(wallet.address);
+        const newBalance = updated.balances
+          .find((b: any) => b.asset_type === 'native')
+          ?.balance || '0';
+
+        setWallet({ ...wallet, balance: newBalance });
+        localStorage.setItem('wallet_session', JSON.stringify({ ...wallet, balance: newBalance }));
+
+        return txRecord;
+      } catch (err: any) {
+        const message = err.message || 'Error en transacción';
+        setError(message);
+        throw err;
+      } finally {
+        setIsLoading(false);
       }
+    },
+    [wallet]
+  );
 
-      const accounts = await (window as any).coinbaseWalletExtension.request({
-        method: 'eth_requestAccounts',
-      });
-
-      setWallet({
-        address: accounts[0],
-        walletType: 'coinbase',
-        isConnected: true,
-      });
-
-      return { address: accounts[0], walletType: 'coinbase' };
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
+  // Obtener historial
+  const getTransactionHistory = useCallback((): TransactionRecord[] => {
+    if (typeof window === 'undefined') return [];
+    const history = localStorage.getItem('tx_history');
+    return history ? JSON.parse(history) : [];
   }, []);
 
-  // Conectar Ledger
-  const connectLedger = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // Simular conexión con Ledger
-      const address = '0x' + Math.random().toString(16).slice(2);
-      
-      setWallet({
-        address,
-        walletType: 'ledger',
-        isConnected: true,
-      });
-
-      return { address, walletType: 'ledger' };
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // Conectar Mercado Pago
-  const connectMercadoPago = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // Redirigir a OAuth de Mercado Pago
-      const clientId = process.env.NEXT_PUBLIC_MERCADO_PAGO_CLIENT_ID;
-      if (!clientId) {
-        throw new Error('Mercado Pago no está configurado');
-      }
-
-      const redirectUri = `${window.location.origin}/auth/mercadopago/callback`;
-      const authUrl = `https://auth.mercadopago.com.ar/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}`;
-      
-      window.location.href = authUrl;
-      return { address: 'mercadopago_user', walletType: 'mercadopago' };
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // Desconectar wallet
+  // Desconectar
   const disconnect = useCallback(() => {
     setWallet(null);
+    localStorage.removeItem('wallet_session');
     setError(null);
+  }, []);
+
+  // Cargar sesión guardada al montar
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const saved = localStorage.getItem('wallet_session');
+    if (saved) {
+      try {
+        setWallet(JSON.parse(saved));
+      } catch {
+        localStorage.removeItem('wallet_session');
+      }
+    }
   }, []);
 
   return {
     wallet,
     isLoading,
     error,
-    connectMetamask,
-    connectStellar,
-    connectCoinbase,
-    connectLedger,
-    connectMercadoPago,
+    freighterReady,
+    connectWallet,
+    payForTrip,
+    getTransactionHistory,
     disconnect,
   };
 };
