@@ -5,33 +5,14 @@
 
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { WalletSelector } from '@/components/WalletSelector';
-import type { WalletType } from '@/hooks/useWalletAuth';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [walletConnected, setWalletConnected] = useState(false);
-  const [userAddress, setUserAddress] = useState<string | null>(null);
-  const [userWalletType, setUserWalletType] = useState<WalletType | null>(null);
 
-  const handleWalletConnect = async (address: string, walletType: WalletType) => {
-    setUserAddress(address);
-    setUserWalletType(walletType);
-    setWalletConnected(true);
-
-    // Guardar sesión
-    localStorage.setItem('userAddress', address);
-    localStorage.setItem('userWalletType', walletType);
-    localStorage.setItem('isAuthenticated', 'true');
-
-    // Redirigir después de 1 segundo
-    setTimeout(() => {
-      router.push('/dashboard');
-    }, 1000);
-  };
+  // El WalletSelector maneja la conexión y redirige automáticamente
 
   return (
     <div 
@@ -58,24 +39,14 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {walletConnected && userAddress ? (
-          <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-md rounded-2xl p-8 border border-green-400/40 shadow-xl text-center">
-            <div className="text-6xl mb-4">✅</div>
-            <h2 className="text-2xl font-bold text-white mb-2">¡Autenticación Exitosa!</h2>
-            <p className="text-green-200 mb-4">Tu wallet ha sido conectado exitosamente.</p>
-            <p className="text-sm text-gray-300 break-all">
-              {userAddress}
-            </p>
-          </div>
-        ) : (
-          <>
-            {/* Info Banner */}
-            <div className="bg-blue-500/20 backdrop-blur-md rounded-xl p-4 mb-6 border border-blue-300/40 shadow-lg">
-              <div className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-blue-300 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-white text-sm font-semibold drop-shadow-sm">
+        <>
+          {/* Info Banner */}
+          <div className="bg-blue-500/20 backdrop-blur-md rounded-xl p-4 mb-6 border border-blue-300/40 shadow-lg">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-blue-300 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-white text-sm font-semibold drop-shadow-sm">
                   Conecta tu wallet para acceder instantáneamente. Tu wallet será tu método de pago para viajes.
                 </p>
               </div>
@@ -91,7 +62,7 @@ export default function LoginPage() {
                 <p className="text-gray-300 text-sm mb-6">
                   Selecciona tu wallet favorito para autenticarte y acceder a tu cuenta de forma segura.
                 </p>
-                <WalletSelector onConnect={handleWalletConnect} showPasskey={false} />
+                <WalletSelector />
               </div>
 
               {/* Features */}
@@ -129,8 +100,7 @@ export default function LoginPage() {
                 </p>
               </div>
             </div>
-          </>
-        )}
+        </>
       </div>
     </div>
   );

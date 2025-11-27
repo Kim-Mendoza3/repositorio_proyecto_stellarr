@@ -23,7 +23,7 @@ const TESTNET_SERVER = new StellarSDK.Horizon.Server(
   'https://horizon-testnet.stellar.org'
 );
 
-const NETWORK_PASSPHRASE = StellarSDK.Networks.TESTNET_NETWORK_PASSPHRASE;
+const NETWORK_PASSPHRASE = 'Test SDF Network ; September 2015';
 
 // Dirección de la operadora de viajes (donde llegan los pagos)
 const TRIPS_OPERATOR_ADDRESS = 'GBUQWP3BOUZX34LOCALQVFSGHFTOJREM23NRHBK264KEXWFNVLB74OOO';

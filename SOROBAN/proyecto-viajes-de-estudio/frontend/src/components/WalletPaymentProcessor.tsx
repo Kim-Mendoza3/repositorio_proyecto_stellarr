@@ -6,7 +6,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { WalletType } from '@/hooks/useWalletAuth';
 
 interface PaymentData {
   amount: number;
@@ -18,7 +17,7 @@ interface PaymentData {
 
 interface WalletPaymentProcessorProps {
   walletAddress: string;
-  walletType: WalletType;
+  walletType: string;
   paymentData: PaymentData;
   onSuccess?: (transactionId: string) => void;
   onError?: (error: string) => void;
