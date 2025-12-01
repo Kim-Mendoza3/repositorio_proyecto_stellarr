@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import useFreighterWallet, { WalletAccount } from '@/hooks/useFreighterWallet';
 
 interface WalletContextType {
@@ -16,6 +16,7 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   const wallet = useFreighterWallet();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Cargar datos guardados al montar
   useEffect(() => {
@@ -30,6 +31,27 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       document.cookie = 'wallet_connected=; path=/; max-age=0';
     }
   }, [wallet.account]);
+
+  // Escuchar cambios en Freighter en tiempo real
+  useEffect(() => {
+    const handleFreighterChange = () => {
+      console.log('🔄 Cambio en estado de Freighter, refrescando...');
+      setRefreshTrigger(prev => prev + 1);
+    };
+
+    if (typeof window !== 'undefined') {
+      // Escuchar eventos de Freighter
+      window.addEventListener('freighter#initialized', handleFreighterChange);
+      window.addEventListener('freighter#ready', handleFreighterChange);
+      window.addEventListener('freighterReady', handleFreighterChange);
+      
+      return () => {
+        window.removeEventListener('freighter#initialized', handleFreighterChange);
+        window.removeEventListener('freighter#ready', handleFreighterChange);
+        window.removeEventListener('freighterReady', handleFreighterChange);
+      };
+    }
+  }, []);
 
   return (
     <WalletContext.Provider

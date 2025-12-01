@@ -51,6 +51,15 @@
 - Cambios de seguridad
 - Comparativa antes/después
 
+### Flujo de Pagos con Transacciones
+📄 **[PAYMENT-FLOW.md](./PAYMENT-FLOW.md)** ⭐ NUEVO
+- Flujo completo de reservas (paso a paso)
+- Arquitectura de pagos Stellar
+- Manejo de errores
+- Estados de la UI
+- Verificación en blockchain
+- Testing del flujo completo
+
 ### Configuración de Ejemplo
 📄 **[CONFIGURATION.js](./CONFIGURATION.js)**
 - Dirección del operador

@@ -201,3 +201,8 @@ pub mod trip_contract;
 
 #[cfg(feature = "trip")]
 pub use trip_contract::*;
+
+// ====== Trips Marketplace for Study Tours ======
+pub mod trips_marketplace_types;
+pub mod trips_marketplace;
+pub use trips_marketplace::{TripsMarketplace, TripsMarketplaceClient};

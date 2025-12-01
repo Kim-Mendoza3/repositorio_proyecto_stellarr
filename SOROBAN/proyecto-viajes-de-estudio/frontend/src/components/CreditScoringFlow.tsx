@@ -76,7 +76,6 @@ const CreditScoringFlow: React.FC<CreditScoringFlowProps> = ({ partnerName }) =>
       
       {currentStep === 'packages' && (
         <TravelPackages
-          incomeData={{} as any}
           onSelectPackage={handleSelectPackage}
           onBack={handleBackToPartners}
         />

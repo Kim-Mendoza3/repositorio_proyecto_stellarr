@@ -37,6 +37,7 @@ pub fn decode(env: &Env, base64_url: &Bytes) -> Result<Bytes, &'static str> {
     }
 
     let mut acc = 0u32;
+
     let mut acc_len = 0u32;
     
     for i in 0..actual_len {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { WalletProvider } from "@/contexts/WalletContext";
-import FreighterSetupBanner from "@/components/FreighterSetupBanner";
+import { SorobanProvider } from "@/contexts/SorobanContext";
 
 export const metadata: Metadata = {
   title: "StudyTrips Global - Financiamiento de viajes de estudio",
@@ -16,8 +16,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isDev = process.env.NODE_ENV === 'development';
-
   return (
     <html lang="es">
       <head>
@@ -25,13 +23,21 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+        
+        {/* Script para detección básica - la API real viene de @stellar/freighter-api */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            console.log('🚀 [LAYOUT] Inicialización completada - usando @stellar/freighter-api');
+          `
+        }} />
       </head>
       <body className="antialiased min-h-screen font-sans">
         <WalletProvider>
-          {isDev && <FreighterSetupBanner />}
-          <div className={isDev ? "pt-32" : ""}>
-            {children}
-          </div>
+          <SorobanProvider>
+            <div>
+              {children}
+            </div>
+          </SorobanProvider>
         </WalletProvider>
       </body>
     </html>

@@ -2,6 +2,14 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import * as StellarSDK from '@stellar/stellar-sdk';
+import * as FreighterAPI from '@stellar/freighter-api';
+
+declare global {
+  interface Window {
+    Freighter?: any;
+    freighter?: any;
+  }
+}
 
 export interface WalletAccount {
   publicKey: string;
@@ -24,8 +32,6 @@ const TESTNET_SERVER = new StellarSDK.Horizon.Server(
 );
 
 const NETWORK_PASSPHRASE = 'Test SDF Network ; September 2015';
-
-// Dirección de la operadora de viajes (donde llegan los pagos)
 const TRIPS_OPERATOR_ADDRESS = 'GBUQWP3BOUZX34LOCALQVFSGHFTOJREM23NRHBK264KEXWFNVLB74OOO';
 
 export const useFreighterWallet = () => {
@@ -35,49 +41,67 @@ export const useFreighterWallet = () => {
   const [transactions, setTransactions] = useState<PendingTransaction[]>([]);
   const [freighterAvailable, setFreighterAvailable] = useState(false);
 
-  // Verificar disponibilidad de Freighter
   useEffect(() => {
     const checkFreighter = async () => {
-      if (typeof window === 'undefined') return;
-
-      for (let i = 0; i < 10; i++) {
-        const freighter = (window as any).freighter;
-        if (freighter) {
-          console.log('✅ Freighter detectado');
+      try {
+        console.log('🔍 [HOOK] Verificando disponibilidad de Freighter usando API importada...');
+        console.log('🔍 [HOOK] FreighterAPI disponible:', !!FreighterAPI);
+        console.log('🔍 [HOOK] FreighterAPI.getAddress disponible:', !!FreighterAPI?.getAddress);
+        
+        // Freighter 6+ API: simplemente intentar llamar a getAddress
+        const addressResult = await FreighterAPI.getAddress();
+        console.log('🔍 [HOOK] Resultado de getAddress:', addressResult);
+        
+        const address = typeof addressResult === 'string' ? addressResult : addressResult?.address;
+        if (address) {
+          console.log('✅ [HOOK] Freighter está disponible, dirección:', address.substring(0, 10) + '...');
           setFreighterAvailable(true);
-          return;
         }
-        await new Promise(resolve => setTimeout(resolve, 200));
+      } catch (err: any) {
+        // getAddress fallará si Freighter no está conectado, pero eso es normal
+        const errorMsg = err?.message || String(err);
+        console.log('ℹ️ [HOOK] Freighter no está conectado todavía (error esperado en mount):', errorMsg.substring(0, 100));
+        console.log('ℹ️ [HOOK] Tipo de error:', err?.constructor?.name);
+        setFreighterAvailable(false);
       }
-      console.log('❌ Freighter no detectado');
     };
 
     checkFreighter();
   }, []);
 
-  // Conectar wallet
   const connectWallet = useCallback(async () => {
-    if (!freighterAvailable) {
-      throw new Error('Freighter no está instalada. Descárgala desde https://freighter.app');
-    }
-
     setIsConnecting(true);
     setError(null);
 
     try {
-      const freighter = (window as any).freighter;
-
-      // Solicitar acceso
-      const allowed = await freighter.isAllowed();
-      if (!allowed) {
-        await freighter.requestAccess();
+      console.log('🔗 [HOOK] Iniciando conexión con Freighter...');
+      
+      // Solicitar acceso a Freighter
+      console.log('📋 [HOOK] Solicitando acceso...');
+      try {
+        await FreighterAPI.requestAccess();
+        console.log('✅ [HOOK] Acceso otorgado');
+      } catch (e) {
+        console.log('ℹ️ [HOOK] requestAccess no disponible (puede ser normal)');
       }
 
-      // Obtener clave pública
-      const publicKey = await freighter.getPublicKey();
-      console.log('Wallet conectada:', publicKey);
+      // Obtener dirección pública
+      console.log('📍 [HOOK] Obteniendo dirección pública...');
+      const publicKeyResult = await FreighterAPI.getAddress();
+      const publicKey = typeof publicKeyResult === 'string' ? publicKeyResult : publicKeyResult?.address;
 
-      // Obtener información de la cuenta en Testnet
+      if (!publicKey) {
+        throw new Error('No se pudo obtener la dirección pública');
+      }
+
+      if (!publicKey.startsWith('G') || publicKey.length !== 56) {
+        throw new Error(`Dirección pública inválida: ${publicKey}`);
+      }
+
+      console.log('✅ [HOOK] Clave pública válida obtenida');
+
+      // Obtener saldo desde Testnet
+      console.log('🔄 [HOOK] Obteniendo saldo de Testnet...');
       const response = await TESTNET_SERVER.accounts().accountId(publicKey).call();
       const balance = parseFloat(
         response.balances.find((b: any) => b.asset_type === 'native')?.balance || '0'
@@ -90,21 +114,22 @@ export const useFreighterWallet = () => {
       };
 
       setAccount(walletData);
+      setFreighterAvailable(true);
       localStorage.setItem('wallet_account', JSON.stringify(walletData));
       localStorage.setItem('wallet_public_key', publicKey);
 
+      console.log('✅ [HOOK] Wallet conectada exitosamente');
       return walletData;
     } catch (err: any) {
       const message = err.message || 'Error conectando wallet';
       setError(message);
-      console.error('Error:', message);
+      console.error('❌ [HOOK] Error de conexión:', message);
       throw err;
     } finally {
       setIsConnecting(false);
     }
-  }, [freighterAvailable]);
+  }, []);
 
-  // Desconectar wallet
   const disconnectWallet = useCallback(() => {
     setAccount(null);
     setTransactions([]);
@@ -113,7 +138,6 @@ export const useFreighterWallet = () => {
     localStorage.removeItem('wallet_public_key');
   }, []);
 
-  // Procesar pago de viaje
   const buyTrip = useCallback(
     async (trip: { id: string; name: string; priceXLM: number }) => {
       if (!account) {
@@ -136,8 +160,6 @@ export const useFreighterWallet = () => {
       setTransactions(prev => [pendingTx, ...prev]);
 
       try {
-        const freighter = (window as any).freighter;
-
         // Obtener cuenta actual
         const sourceAccount = await TESTNET_SERVER.loadAccount(account.publicKey);
 
@@ -154,13 +176,26 @@ export const useFreighterWallet = () => {
               amount: trip.priceXLM.toString(),
             })
           )
-          .setTimeout(300) // 5 minutos timeout
+          .setTimeout(300)
           .build();
 
-        // Firmar con Freighter
-        const signedXdr = await freighter.signTransaction(transaction.toXDR(), {
-          network: NETWORK_PASSPHRASE,
-        });
+        console.log('🔐 [HOOK] Solicitando firma a Freighter...');
+        
+        // Freighter 6+ signTransaction
+        const signedXdrResult = await FreighterAPI.signTransaction(
+          transaction.toXDR(),
+          {
+            networkPassphrase: NETWORK_PASSPHRASE,
+          }
+        );
+
+        const signedXdr = typeof signedXdrResult === 'string' ? signedXdrResult : signedXdrResult?.signedTxXdr;
+
+        if (!signedXdr) {
+          throw new Error('No se pudo obtener la firma de la transacción');
+        }
+
+        console.log('✅ [HOOK] Transacción firmada');
 
         const signedTx = StellarSDK.TransactionBuilder.fromXDR(
           signedXdr,
@@ -175,8 +210,9 @@ export const useFreighterWallet = () => {
         );
 
         // Enviar a la red
+        console.log('📤 [HOOK] Enviando transacción a Testnet...');
         const result = await TESTNET_SERVER.submitTransaction(signedTx);
-        console.log('✅ Transacción enviada:', result);
+        console.log('✅ [HOOK] Transacción enviada:', result.hash);
 
         // Actualizar estado a success
         setTransactions(prev =>
@@ -223,7 +259,6 @@ export const useFreighterWallet = () => {
     [account]
   );
 
-  // Cargar datos guardados
   const loadSavedData = useCallback(() => {
     try {
       const saved = localStorage.getItem('wallet_account');
@@ -235,7 +270,6 @@ export const useFreighterWallet = () => {
     }
   }, []);
 
-  // Obtener historial de transacciones de Testnet
   const fetchTransactionHistory = useCallback(async () => {
     if (!account) return [];
 

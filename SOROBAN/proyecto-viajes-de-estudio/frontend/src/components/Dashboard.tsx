@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { WalletPaymentProcessor } from './WalletPaymentProcessor';
-import type { WalletType } from '@/hooks/useWalletAuth';
 
 interface PasskeyData {
   credentialId: string;
@@ -21,14 +20,14 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenticate }) => {
   const [copied, setCopied] = useState<string | null>(null);
   const [userAddress, setUserAddress] = useState<string | null>(null);
-  const [walletType, setWalletType] = useState<WalletType | null>(null);
+  const [walletType, setWalletType] = useState<string | null>(null);
   const [showPayment, setShowPayment] = useState(false);
   const [selectedTrip, setSelectedTrip] = useState<any | null>(null);
 
   useEffect(() => {
     // Cargar datos de localStorage para wallet
     const address = localStorage.getItem('userAddress');
-    const wallet = localStorage.getItem('userWalletType') as WalletType | null;
+    const wallet = localStorage.getItem('userWalletType') as string | null;
     if (address && wallet) {
       setUserAddress(address);
       setWalletType(wallet);
@@ -97,7 +96,7 @@ const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenti
           {/* Welcome Section */}
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-white mb-2">
-              ¡Bienvenido, <span className="text-yellow-300">{passkeyData.username || 'Estudiante'}!</span>
+              ¡Bienvenido, <span className="text-yellow-300">{passkeyData?.username || 'Estudiante'}!</span>
             </h1>
             <p className="text-white text-lg font-semibold">
               Tu cuenta de viajes de estudio está protegida con autenticación biométrica
@@ -213,11 +212,11 @@ const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenti
                   <div className="flex items-center space-x-2">
                     <div className="flex-1 bg-black/20 rounded-lg p-3 border border-white/10">
                       <code className="text-green-400 text-sm break-all">
-                        {shortenString(passkeyData.credentialId)}
+                        {shortenString(passkeyData?.credentialId || '')}
                       </code>
                     </div>
                     <button
-                      onClick={() => copyToClipboard(passkeyData.credentialId, 'credential')}
+                      onClick={() => copyToClipboard(passkeyData?.credentialId || '', 'credential')}
                       className="p-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg border border-purple-500/30 transition-colors"
                     >
                       {copied === 'credential' ? (
@@ -239,11 +238,11 @@ const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenti
                   <div className="flex items-center space-x-2">
                     <div className="flex-1 bg-black/20 rounded-lg p-3 border border-white/10">
                       <code className="text-blue-400 text-sm break-all">
-                        {shortenString(passkeyData.publicKey)}
+                        {shortenString(passkeyData?.publicKey || '')}
                       </code>
                     </div>
                     <button
-                      onClick={() => copyToClipboard(passkeyData.publicKey, 'publicKey')}
+                      onClick={() => copyToClipboard(passkeyData?.publicKey || '', 'publicKey')}
                       className="p-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg border border-blue-500/30 transition-colors"
                     >
                       {copied === 'publicKey' ? (
@@ -260,17 +259,17 @@ const Dashboard: React.FC<DashboardProps> = ({ passkeyData, onLogout, onAuthenti
                 </div>
 
                 {/* Account Address */}
-                {passkeyData.accountAddress && (
+                {passkeyData?.accountAddress && (
                   <div>
                     <label className="block text-gray-300 text-sm font-medium mb-2">Dirección de Cuenta</label>
                     <div className="flex items-center space-x-2">
                       <div className="flex-1 bg-black/20 rounded-lg p-3 border border-white/10">
                         <code className="text-yellow-400 text-sm break-all">
-                          {shortenString(passkeyData.accountAddress)}
+                          {shortenString(passkeyData?.accountAddress || '')}
                         </code>
                       </div>
                       <button
-                        onClick={() => copyToClipboard(passkeyData.accountAddress!, 'address')}
+                        onClick={() => copyToClipboard(passkeyData?.accountAddress || '', 'address')}
                         className="p-2 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-lg border border-yellow-500/30 transition-colors"
                       >
                         {copied === 'address' ? (
