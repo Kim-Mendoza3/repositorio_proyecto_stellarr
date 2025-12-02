@@ -2,13 +2,14 @@
 
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { useTripOffers } from '@/hooks/useTripOffers';
 import { useStellarTransaction } from '@/hooks/useStellarTransaction';
 import { useWallet } from '@/contexts/WalletContext';
 import { FreighterStatus } from '@/components/FreighterStatus';
 import { ArrowLeft, AlertCircle, CheckCircle, Clock, Zap, Send } from 'lucide-react';
 
-export default function TripDetailPage() {
+function TripDetailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tripId = searchParams.get('id');
@@ -308,5 +309,13 @@ export default function TripDetailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function TripDetailPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center"><p className="text-gray-400">Cargando detalles del viaje...</p></div>}>
+      <TripDetailContent />
+    </Suspense>
   );
 }
