@@ -1,14 +1,15 @@
 # Netlify Configuration for Proyecto Viajes de Estudio
 # Build and deploy Next.js frontend
-# Cache busting: 2025-12-03-v2
+# Cache busting: 2025-12-03-v3 - Force cache clear for devDependencies
 
 [build]
   base = "SOROBAN/proyecto-viajes-de-estudio/frontend"
-  command = "npm install --legacy-peer-deps && npm run build"
+  command = "rm -rf node_modules package-lock.json && npm install --legacy-peer-deps && npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
+  CI = "true"
 
 # Routes configuration for Next.js
 [[redirects]]
