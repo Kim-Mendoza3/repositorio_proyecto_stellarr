@@ -2,13 +2,14 @@
 # Build and deploy Next.js frontend
 
 [build]
-  base = "Repositorio_Proyecto_Stellar/SOROBAN/proyecto-viajes-de-estudio/frontend"
-  command = "npm run build"
+  base = "SOROBAN/proyecto-viajes-de-estudio/frontend"
+  command = "npm ci --legacy-peer-deps && npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
   NODE_ENV = "production"
+  NPM_FLAGS = "--legacy-peer-deps"
 
 # Routes configuration for Next.js
 [[redirects]]
