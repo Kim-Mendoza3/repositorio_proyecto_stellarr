@@ -3,32 +3,20 @@
 
 [build]
   command = "npm run build"
-  functions = "netlify/functions"
   publish = ".next"
 
 [build.environment]
-  # Node.js version
   NODE_VERSION = "18"
-  # Build environment
   NODE_ENV = "production"
 
-# Redirect rules
+# Redirect rules for SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
 
-# Headers for security and performance
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
-    X-XSS-Protection = "1; mode=block"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
-
-# Cache settings for static files
+# Cache headers for static assets
 [[headers]]
   for = "/_next/static/*"
   [headers.values]
@@ -39,14 +27,10 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Environment variables - Add these in Netlify UI
-# NEXT_PUBLIC_STELLAR_NETWORK=testnet
-# NEXT_PUBLIC_STELLAR_RPC=https://soroban-testnet.stellar.org
-# NEXT_PUBLIC_TRIPS_CONTRACT_ID=CC2YDTXD7DRKCQD43XO4XEE56IIYVXBO7PRYI2QDPFHMSCSMXG7P54VU
-# NEXT_PUBLIC_APP_NAME=Viajes de Estudio MX
-# NEXT_PUBLIC_APP_URL=https://tu-dominio.netlify.app
-# NODE_ENV=production
-# NEXT_PUBLIC_MERCADO_PAGO_CLIENT_ID=your-production-id
-# MERCADO_PAGO_CLIENT_SECRET=your-production-secret
-# NEXT_PUBLIC_ETHEREUM_RPC=https://sepolia.infura.io/v3/your-key
-# NEXT_PUBLIC_ETHEREUM_NETWORK=sepolia
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
