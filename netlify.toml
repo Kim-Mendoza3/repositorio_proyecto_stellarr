@@ -1,5 +1,5 @@
 # Netlify Configuration for Proyecto Viajes de Estudio
-# This file tells Netlify how to build and deploy the Next.js frontend
+# Build and deploy Next.js frontend
 
 [build]
   base = "Repositorio_Proyecto_Stellar/SOROBAN/proyecto-viajes-de-estudio/frontend"
@@ -10,15 +10,8 @@
   NODE_VERSION = "18"
   NODE_ENV = "production"
 
-# Redirect all dynamic routes to index for Next.js
+# Routes configuration for Next.js
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  force = false
-
-# Cache static assets
-[[headers]]
-  for = "/_next/static/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
