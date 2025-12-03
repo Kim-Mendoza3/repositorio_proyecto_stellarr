@@ -71,5 +71,50 @@
     "amount": 200,
     "status": "pending",
     "createdAt": "2025-12-01T21:24:04.480Z"
+  },
+  {
+    "id": "reservation_1764791419762",
+    "tripId": "trip_1764371203289",
+    "clientWallet": "GCKPCZ6FOWMOC7XDLXUEBLRSDUDRS4ZTSMT665IXVY7Q52XSGV4RPLFG",
+    "companyWallet": "GCJZLPW32VHUS4YUL3GKUMRJTTDQKMX4U3TUV3FEZT55MQYRA2LTPAYG",
+    "amount": 100,
+    "status": "pending",
+    "createdAt": "2025-12-03T19:50:19.762Z"
+  },
+  {
+    "id": "reservation_1764791947939",
+    "tripId": "trip_1764791904370",
+    "clientWallet": "GCKPCZ6FOWMOC7XDLXUEBLRSDUDRS4ZTSMT665IXVY7Q52XSGV4RPLFG",
+    "companyWallet": "GD56LBGC7WGXYKJZLWJUKJG6VOWDESIG2J24R52SNSVDPQSSLNREMJE6",
+    "amount": 300,
+    "status": "pending",
+    "createdAt": "2025-12-03T19:59:07.939Z"
+  },
+  {
+    "id": "reservation_1764792305567",
+    "tripId": "trip_1764622163372",
+    "clientWallet": "GCKPCZ6FOWMOC7XDLXUEBLRSDUDRS4ZTSMT665IXVY7Q52XSGV4RPLFG",
+    "companyWallet": "GCJZLPW32VHUS4YUL3GKUMRJTTDQKMX4U3TUV3FEZT55MQYRA2LTPAYG",
+    "amount": 300,
+    "status": "pending",
+    "createdAt": "2025-12-03T20:05:05.568Z"
+  },
+  {
+    "id": "reservation_1764792336303",
+    "tripId": "trip_1764791904370",
+    "clientWallet": "GCKPCZ6FOWMOC7XDLXUEBLRSDUDRS4ZTSMT665IXVY7Q52XSGV4RPLFG",
+    "companyWallet": "GD56LBGC7WGXYKJZLWJUKJG6VOWDESIG2J24R52SNSVDPQSSLNREMJE6",
+    "amount": 300,
+    "status": "pending",
+    "createdAt": "2025-12-03T20:05:36.303Z"
+  },
+  {
+    "id": "reservation_1764793302291",
+    "tripId": "trip_1764622163372",
+    "clientWallet": "GCKPCZ6FOWMOC7XDLXUEBLRSDUDRS4ZTSMT665IXVY7Q52XSGV4RPLFG",
+    "companyWallet": "GCJZLPW32VHUS4YUL3GKUMRJTTDQKMX4U3TUV3FEZT55MQYRA2LTPAYG",
+    "amount": 300,
+    "status": "pending",
+    "createdAt": "2025-12-03T20:21:42.292Z"
   }
 ]

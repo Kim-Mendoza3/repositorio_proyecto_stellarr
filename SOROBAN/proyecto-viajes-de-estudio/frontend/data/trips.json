@@ -22,7 +22,7 @@
     "priceXLM": 100,
     "description": "",
     "maxParticipants": 4,
-    "currentBookings": 2,
+    "currentBookings": 3,
     "status": "active",
     "createdAt": "2025-11-28T23:06:43.335Z",
     "highlights": []
@@ -36,11 +36,27 @@
     "priceXLM": 300,
     "description": "aksjdoas",
     "maxParticipants": 5,
-    "currentBookings": 1,
+    "currentBookings": 3,
     "status": "active",
     "createdAt": "2025-12-01T20:49:23.504Z",
     "highlights": [
       "kasjdikasj"
+    ]
+  },
+  {
+    "id": "trip_1764791904370",
+    "companyWallet": "GD56LBGC7WGXYKJZLWJUKJG6VOWDESIG2J24R52SNSVDPQSSLNREMJE6",
+    "name": "casa de tono",
+    "destination": "oaxaca",
+    "duration": "3",
+    "priceXLM": 300,
+    "description": "fefrgrg",
+    "maxParticipants": 4,
+    "currentBookings": 2,
+    "status": "active",
+    "createdAt": "2025-12-03T19:58:24.444Z",
+    "highlights": [
+      "regregre"
     ]
   }
 ]
