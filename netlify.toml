@@ -3,12 +3,11 @@
 
 [build]
   base = "SOROBAN/proyecto-viajes-de-estudio/frontend"
-  command = "npm ci --legacy-peer-deps && npm run build"
+  command = "npm install --legacy-peer-deps --no-optional && npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
-  NODE_ENV = "production"
   NPM_FLAGS = "--legacy-peer-deps"
 
 # Routes configuration for Next.js
