@@ -4,7 +4,7 @@
 
 [build]
   base = "SOROBAN/proyecto-viajes-de-estudio/frontend"
-  command = "npm ci --legacy-peer-deps && npm run build"
+  command = "npm install --legacy-peer-deps && npm run build"
   publish = ".next"
 
 [build.environment]
