@@ -2,12 +2,11 @@
 # Simple configuration for Next.js deployment
 
 [build]
-  command = "npm run build"
+  command = "npm ci && npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
-  NODE_ENV = "production"
 
 # Routes for Next.js SPA
 [[redirects]]
