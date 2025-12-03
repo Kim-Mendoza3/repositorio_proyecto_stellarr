@@ -13,7 +13,7 @@
   "dependencies": {
     "@capacitor/core": "^5.7.8",
     "@darkedges/capacitor-native-webauthn": "^0.0.4",
-    "@rainbow-me/rainbowkit": "^2.2.9",
+    "@rainbow-me/rainbowkit": "^3.0.0",
     "@simplewebauthn/browser": "^13.2.0",
     "@simplewebauthn/types": "^12.0.0",
     "@stellar/freighter-api": "^6.0.0",
