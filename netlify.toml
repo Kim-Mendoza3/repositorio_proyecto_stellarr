@@ -1,5 +1,6 @@
 # Netlify Configuration for Proyecto Viajes de Estudio
 # Build and deploy Next.js frontend
+# Cache busting: 2025-12-03-v2
 
 [build]
   base = "SOROBAN/proyecto-viajes-de-estudio/frontend"
