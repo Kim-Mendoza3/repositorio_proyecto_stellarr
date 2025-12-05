@@ -1,8 +1,7 @@
 {
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
+  "buildCommand": "cd frontend && npm run build",
+  "devCommand": "cd frontend && npm run dev",
+  "installCommand": "cd frontend && npm install",
   "framework": "nextjs",
-  "nodeVersion": "22.19.0",
-  "root": "frontend"
+  "nodeVersion": "22.19.0"
 }

@@ -4,10 +4,10 @@
   "description": "Viajes de Estudio dApp - Soroban Smart Contracts",
   "private": true,
   "scripts": {
-    "dev": "npm -C frontend run dev",
-    "build": "npm -C frontend run build",
-    "start": "npm -C frontend run start",
-    "lint": "npm -C frontend run lint"
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
+    "lint": "cd frontend && npm run lint"
   },
   "workspaces": [
     "frontend"
