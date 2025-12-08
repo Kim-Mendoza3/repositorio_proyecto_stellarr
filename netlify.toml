@@ -16,7 +16,7 @@
 
 [build.environment]
   NODE_VERSION = "20.9.0"
-  NODE_ENV = "development"
+  NODE_ENV = "production"
 
 # Environment variables for production
 [context.production.environment]
