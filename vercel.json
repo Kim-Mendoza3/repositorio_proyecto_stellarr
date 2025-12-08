@@ -1,5 +1,8 @@
 {
-  "root": "SOROBAN/proyecto-viajes-de-estudio/frontend",
+  "buildCommand": "cd SOROBAN/proyecto-viajes-de-estudio/frontend && npm run build",
+  "devCommand": "cd SOROBAN/proyecto-viajes-de-estudio/frontend && npm run dev",
+  "installCommand": "cd SOROBAN/proyecto-viajes-de-estudio/frontend && npm install",
   "framework": "nextjs",
-  "nodeVersion": "22.19.0"
+  "nodeVersion": "22.19.0",
+  "outputDirectory": "SOROBAN/proyecto-viajes-de-estudio/frontend/.next"
 }
