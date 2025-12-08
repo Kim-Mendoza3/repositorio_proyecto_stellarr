@@ -1,4 +1,6 @@
 'use client';
+export const dynamic = 'force-dynamic';
+
 import { useState } from 'react';
 import { useUserRegistry } from '@/hooks/useUserRegistry';
 import { Play, RotateCcw, Eye, AlertCircle } from 'lucide-react';
