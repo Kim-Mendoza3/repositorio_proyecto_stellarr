@@ -5,7 +5,7 @@
   # Base directory (where package.json is)
   base = "SOROBAN/proyecto-viajes-de-estudio/frontend"
   
-  # Build command with legacy-peer-deps to fix viem/rainbowkit conflict
+  # Build command with legacy-peer-deps for safety
   command = "npm install --legacy-peer-deps && npm run build"
   
   # Output directory (where .next folder is)
