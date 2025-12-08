@@ -7,8 +7,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Use /tmp in Netlify (serverless), fallback to data/ in local dev
+const isNetlify = process.env.NETLIFY === 'true';
+const DATA_DIR = isNetlify 
+  ? '/tmp/viajar-data' 
+  : path.join(process.cwd(), 'data');
 const TRIPS_FILE = path.join(DATA_DIR, 'trips.json');
+
+console.log(`[TRIPS API] Using DATA_DIR: ${DATA_DIR} (Netlify: ${isNetlify})`);
 
 const ensureDataDir = () => {
   if (!fs.existsSync(DATA_DIR)) {

@@ -7,10 +7,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-// En producción, esto se conectaría a tu contrato Soroban
-// Por ahora, usamos un JSON simple como pseudo-backend
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Use /tmp in Netlify (serverless), fallback to data/ in local dev
+const isNetlify = process.env.NETLIFY === 'true';
+const DATA_DIR = isNetlify 
+  ? '/tmp/viajar-data' 
+  : path.join(process.cwd(), 'data');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
+
+console.log(`[USERS API] Using DATA_DIR: ${DATA_DIR} (Netlify: ${isNetlify})`);
 
 const ensureDataDir = () => {
   if (!fs.existsSync(DATA_DIR)) {
