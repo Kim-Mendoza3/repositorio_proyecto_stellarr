@@ -1,4 +1,6 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Download, CheckCircle, AlertCircle, Loader } from 'lucide-react';
@@ -8,14 +10,14 @@ export default function WalletSetupPage() {
   const [freighterDetected, setFreighterDetected] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
 
-  // Verificar periódicamente si Freighter está instalada
+  // Verificar periÃ³dicamente si Freighter estÃ¡ instalada
   useEffect(() => {
     const checkFreighter = async () => {
       setIsChecking(true);
       for (let i = 0; i < 30; i++) {
         if ((window as any).freighter) {
           setFreighterDetected(true);
-          // Redirigir después de 2 segundos
+          // Redirigir despuÃ©s de 2 segundos
           setTimeout(() => {
             router.push('/login');
           }, 2000);
@@ -47,8 +49,8 @@ export default function WalletSetupPage() {
             <div className="mb-4 flex justify-center">
               <CheckCircle className="w-16 h-16 text-green-400" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">¡Freighter Detectada!</h2>
-            <p className="text-green-200 mb-4">Hemos detectado tu extensión Freighter instalada correctamente.</p>
+            <h2 className="text-2xl font-bold text-white mb-2">Â¡Freighter Detectada!</h2>
+            <p className="text-green-200 mb-4">Hemos detectado tu extensiÃ³n Freighter instalada correctamente.</p>
             <p className="text-sm text-gray-300">Redirigiendo al login...</p>
             <div className="mt-4">
               <Loader className="w-5 h-5 animate-spin mx-auto text-green-400" />
@@ -81,13 +83,13 @@ export default function WalletSetupPage() {
 
               <div className="space-y-4 mb-8">
                 <p className="text-gray-300">
-                  Freighter es una extensión de navegador segura que protege tus activos en la red Stellar.
+                  Freighter es una extensiÃ³n de navegador segura que protege tus activos en la red Stellar.
                 </p>
 
                 <div className="bg-blue-500/20 border border-blue-300/40 rounded-lg p-4 flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-blue-300 flex-shrink-0 mt-0.5" />
                   <p className="text-blue-200 text-sm">
-                    Solo usa Freighter descargado desde <strong>freighter.app</strong>. No confíes en otras fuentes.
+                    Solo usa Freighter descargado desde <strong>freighter.app</strong>. No confÃ­es en otras fuentes.
                   </p>
                 </div>
 
@@ -106,27 +108,27 @@ export default function WalletSetupPage() {
 
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <CheckCircle className="w-6 h-6 text-green-400" />
-                Paso 2: Instalar Extensión
+                Paso 2: Instalar ExtensiÃ³n
               </h2>
 
               <div className="space-y-4 mb-8">
                 <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-4">
                   <p className="text-gray-300 font-semibold mb-2">Instrucciones por navegador:</p>
                   <ul className="text-gray-300 text-sm space-y-2">
-                    <li><strong>Chrome/Brave:</strong> Click en la descarga → "Añadir a Chrome"</li>
-                    <li><strong>Firefox:</strong> Click en la descarga → "Añadir a Firefox"</li>
-                    <li><strong>Edge:</strong> Click en la descarga → "Obtener extensión"</li>
+                    <li><strong>Chrome/Brave:</strong> Click en la descarga â†’ "AÃ±adir a Chrome"</li>
+                    <li><strong>Firefox:</strong> Click en la descarga â†’ "AÃ±adir a Firefox"</li>
+                    <li><strong>Edge:</strong> Click en la descarga â†’ "Obtener extensiÃ³n"</li>
                   </ul>
                 </div>
 
                 <div className="bg-amber-500/20 border border-amber-300/40 rounded-lg p-4 flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-amber-300 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-amber-200 text-sm font-semibold mb-2">Después de instalar:</p>
+                    <p className="text-amber-200 text-sm font-semibold mb-2">DespuÃ©s de instalar:</p>
                     <ul className="text-amber-100 text-sm space-y-1">
-                      <li>✓ Encontrarás el icono de Freighter en tu navegador</li>
-                      <li>✓ Click en el icono para abrir la extensión</li>
-                      <li>✓ Crea una nueva wallet o importa una existente</li>
+                      <li>âœ“ EncontrarÃ¡s el icono de Freighter en tu navegador</li>
+                      <li>âœ“ Click en el icono para abrir la extensiÃ³n</li>
+                      <li>âœ“ Crea una nueva wallet o importa una existente</li>
                     </ul>
                   </div>
                 </div>
@@ -136,12 +138,12 @@ export default function WalletSetupPage() {
 
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Loader className="w-6 h-6 text-cyan-400 animate-spin" />
-                Paso 3: Espera Detección
+                Paso 3: Espera DetecciÃ³n
               </h2>
 
               <div className="space-y-4">
                 <p className="text-gray-300">
-                  Estamos verificando si Freighter está instalada...
+                  Estamos verificando si Freighter estÃ¡ instalada...
                 </p>
 
                 {isChecking && (
@@ -163,17 +165,17 @@ export default function WalletSetupPage() {
             {/* Features */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                <div className="text-3xl mb-2">🔐</div>
+                <div className="text-3xl mb-2">ðŸ”</div>
                 <h3 className="text-white font-bold text-sm mb-1">Seguro</h3>
                 <p className="text-gray-300 text-xs">Tus claves privadas nunca dejan tu navegador</p>
               </div>
               <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                <div className="text-3xl mb-2">⚡</div>
-                <h3 className="text-white font-bold text-sm mb-1">Rápido</h3>
-                <p className="text-gray-300 text-xs">Transacciones instantáneas en Stellar</p>
+                <div className="text-3xl mb-2">âš¡</div>
+                <h3 className="text-white font-bold text-sm mb-1">RÃ¡pido</h3>
+                <p className="text-gray-300 text-xs">Transacciones instantÃ¡neas en Stellar</p>
               </div>
               <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                <div className="text-3xl mb-2">🌍</div>
+                <div className="text-3xl mb-2">ðŸŒ</div>
                 <h3 className="text-white font-bold text-sm mb-1">Descentralizado</h3>
                 <p className="text-gray-300 text-xs">Control total de tus activos</p>
               </div>
@@ -183,23 +185,23 @@ export default function WalletSetupPage() {
             <div className="bg-blue-500/20 backdrop-blur-md rounded-2xl p-6 border border-blue-300/40">
               <h3 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
                 <AlertCircle className="w-5 h-5" />
-                ¿Necesitas Ayuda?
+                Â¿Necesitas Ayuda?
               </h3>
               <ul className="text-blue-100 text-sm space-y-2">
                 <li>
-                  📚{' '}
+                  ðŸ“š{' '}
                   <a href="https://docs.freighter.app" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline">
-                    Documentación de Freighter
+                    DocumentaciÃ³n de Freighter
                   </a>
                 </li>
                 <li>
-                  🎓{' '}
+                  ðŸŽ“{' '}
                   <a href="https://stellar.org" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline">
                     Aprende sobre Stellar
                   </a>
                 </li>
                 <li>
-                  💬 Contacta nuestro soporte: support@viajesdeestudio.mx
+                  ðŸ’¬ Contacta nuestro soporte: support@viajesdeestudio.mx
                 </li>
               </ul>
             </div>
@@ -209,6 +211,8 @@ export default function WalletSetupPage() {
     </div>
   );
 }
+
+
 
 
 

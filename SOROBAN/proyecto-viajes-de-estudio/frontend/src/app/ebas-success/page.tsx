@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
 
 import { useRouter } from 'next/navigation';
 import { CheckCircle, Home } from 'lucide-react';
@@ -11,10 +12,10 @@ export default function EBASSuccess() {
       <div className="max-w-4xl mx-auto">
         <div className="bg-slate-800/50 rounded-3xl p-12 text-center">
           <CheckCircle className="w-24 h-24 text-green-400 mx-auto mb-6" />
-          <h1 className="text-4xl font-bold text-white mb-4">¡Préstamo Aprobado!</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">Â¡PrÃ©stamo Aprobado!</h1>
           <p className="text-2xl text-green-400 mb-8">$500 USD</p>
           <p className="text-gray-300 mb-8">
-            Tu préstamo ha sido aprobado y depositado en tu wallet de Stellar
+            Tu prÃ©stamo ha sido aprobado y depositado en tu wallet de Stellar
           </p>
           
           <div className="bg-slate-900/50 rounded-xl p-6 mb-8 text-left">
@@ -36,6 +37,8 @@ export default function EBASSuccess() {
     </div>
   );
 }
+
+
 
 
 

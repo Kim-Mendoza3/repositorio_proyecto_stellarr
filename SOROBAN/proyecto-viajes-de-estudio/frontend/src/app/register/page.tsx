@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -16,7 +17,7 @@ export default function RegisterNewPage() {
   const { account, connectWallet } = useWallet();
   const { registerUser, getCurrentUser, getUserByWallet } = useUserRegistry();
   
-  // Pasos: userdata → usertype → wallet → success
+  // Pasos: userdata â†’ usertype â†’ wallet â†’ success
   const [step, setStep] = useState<'userdata' | 'usertype' | 'usertype-form' | 'wallet' | 'success'>('userdata');
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedUserType, setSelectedUserType] = useState<UserType | null>(null);
@@ -36,12 +37,12 @@ export default function RegisterNewPage() {
     school: '',
   });
 
-  // Si ya está conectado y registrado, ir al dashboard
+  // Si ya estÃ¡ conectado y registrado, ir al dashboard
   useEffect(() => {
     if (account) {
       const currentUser = getCurrentUser();
       if (currentUser) {
-        // Ya está registrado
+        // Ya estÃ¡ registrado
         if (currentUser.userType === 'company') {
           router.push('/company-dashboard');
         } else {
@@ -62,11 +63,11 @@ export default function RegisterNewPage() {
     }
 
     if (!formData.email.includes('@')) {
-      setFormError('Email inválido');
+      setFormError('Email invÃ¡lido');
       return;
     }
 
-    // Avanzar a selección de tipo
+    // Avanzar a selecciÃ³n de tipo
     setStep('usertype');
   };
 
@@ -86,7 +87,7 @@ export default function RegisterNewPage() {
       return;
     }
 
-    // Validaciones específicas
+    // Validaciones especÃ­ficas
     if (selectedUserType === 'company') {
       if (!formData.companyName.trim()) {
         setFormError('Nombre de empresa requerido');
@@ -117,16 +118,16 @@ export default function RegisterNewPage() {
     setFormError('');
 
     try {
-      // Conectar wallet - el hook manejará todo
+      // Conectar wallet - el hook manejarÃ¡ todo
       const walletAccount = await connectWallet();
       if (!walletAccount) {
         throw new Error('No se pudo conectar la wallet');
       }
 
-      // Verificar si esta wallet ya está registrada (async)
+      // Verificar si esta wallet ya estÃ¡ registrada (async)
       const existingUser = await getUserByWallet(walletAccount.publicKey);
       if (existingUser) {
-        setFormError('Esta wallet ya está registrada. Intenta iniciar sesión.');
+        setFormError('Esta wallet ya estÃ¡ registrada. Intenta iniciar sesiÃ³n.');
         setIsProcessing(false);
         return;
       }
@@ -144,17 +145,17 @@ export default function RegisterNewPage() {
         phone: formData.phone,
         companyName: selectedUserType === 'company' ? formData.companyName : undefined,
         businessLicense: selectedUserType === 'company' ? formData.businessLicense : undefined,
-        bankAccount: walletAccount.publicKey, // Usar la dirección de wallet como cuenta
+        bankAccount: walletAccount.publicKey, // Usar la direcciÃ³n de wallet como cuenta
         school: selectedUserType === 'client' ? formData.school : undefined,
         studentId: selectedUserType === 'client' ? formData.studentId : undefined,
         verified: true,
         status: 'active',
       });
 
-      // Ir a página de éxito
+      // Ir a pÃ¡gina de Ã©xito
       setStep('success');
       
-      // Redirigir después de 2 segundos
+      // Redirigir despuÃ©s de 2 segundos
       setTimeout(() => {
         if (selectedUserType === 'company') {
           router.push('/company-dashboard');
@@ -171,30 +172,30 @@ export default function RegisterNewPage() {
     }
   };
 
-  // Registrar con dirección manual
+  // Registrar con direcciÃ³n manual
   const handleRegisterManualWallet = async () => {
     setIsProcessing(true);
     setFormError('');
 
     try {
-      // Validar que sea una dirección válida de Stellar
+      // Validar que sea una direcciÃ³n vÃ¡lida de Stellar
       if (!manualWalletAddress.trim()) {
-        setFormError('Ingresa una dirección de wallet');
+        setFormError('Ingresa una direcciÃ³n de wallet');
         setIsProcessing(false);
         return;
       }
 
-      // Verificar formato básico (comienza con G y tiene 56 caracteres)
+      // Verificar formato bÃ¡sico (comienza con G y tiene 56 caracteres)
       if (!manualWalletAddress.startsWith('G') || manualWalletAddress.length !== 56) {
-        setFormError('Dirección de wallet inválida. Debe comenzar con G y tener 56 caracteres');
+        setFormError('DirecciÃ³n de wallet invÃ¡lida. Debe comenzar con G y tener 56 caracteres');
         setIsProcessing(false);
         return;
       }
 
-      // Verificar si esta wallet ya está registrada (async)
+      // Verificar si esta wallet ya estÃ¡ registrada (async)
       const existingUser = await getUserByWallet(manualWalletAddress);
       if (existingUser) {
-        setFormError('Esta wallet ya está registrada. Intenta iniciar sesión.');
+        setFormError('Esta wallet ya estÃ¡ registrada. Intenta iniciar sesiÃ³n.');
         setIsProcessing(false);
         return;
       }
@@ -215,14 +216,14 @@ export default function RegisterNewPage() {
         bankAccount: manualWalletAddress,
         school: selectedUserType === 'client' ? formData.school : undefined,
         studentId: selectedUserType === 'client' ? formData.studentId : undefined,
-        verified: false, // Marcar como no verificado para validación manual después
+        verified: false, // Marcar como no verificado para validaciÃ³n manual despuÃ©s
         status: 'active',
       });
 
-      // Ir a página de éxito
+      // Ir a pÃ¡gina de Ã©xito
       setStep('success');
       
-      // Redirigir después de 2 segundos
+      // Redirigir despuÃ©s de 2 segundos
       setTimeout(() => {
         if (selectedUserType === 'company') {
           router.push('/company-dashboard');
@@ -256,7 +257,7 @@ export default function RegisterNewPage() {
 
         {/* Progress Indicator */}
         <div className="flex justify-between items-center mb-12 px-4">
-          {['Datos', 'Tipo', 'Info', 'Wallet', 'Éxito'].map((label, idx) => {
+          {['Datos', 'Tipo', 'Info', 'Wallet', 'Ã‰xito'].map((label, idx) => {
             const steps: Array<typeof step> = ['userdata', 'usertype', 'usertype-form', 'wallet', 'success'];
             const isActive = steps.indexOf(step) >= idx;
             const stepNum = idx + 1;
@@ -285,12 +286,12 @@ export default function RegisterNewPage() {
             <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-red-200">{formError}</p>
-              {formError.includes('Freighter no está disponible') && (
+              {formError.includes('Freighter no estÃ¡ disponible') && (
                 <Link
                   href="/diagnostics"
                   className="text-sm text-red-300 hover:text-red-200 underline mt-2 inline-block"
                 >
-                  🔍 Ejecutar diagnóstico →
+                  ðŸ” Ejecutar diagnÃ³stico â†’
                 </Link>
               )}
             </div>
@@ -300,7 +301,7 @@ export default function RegisterNewPage() {
         {/* PASO 1: DATOS DEL USUARIO */}
         {step === 'userdata' && (
           <div className="bg-slate-800/50 backdrop-blur border border-purple-500/20 rounded-xl p-8">
-            <h2 className="text-2xl font-bold text-white mb-6">Cuéntanos sobre ti</h2>
+            <h2 className="text-2xl font-bold text-white mb-6">CuÃ©ntanos sobre ti</h2>
             
             <form onSubmit={handleUserDataSubmit} className="space-y-4">
               <div>
@@ -331,7 +332,7 @@ export default function RegisterNewPage() {
 
               <div>
                 <label className="block text-sm font-medium text-purple-200 mb-2">
-                  Teléfono (opcional)
+                  TelÃ©fono (opcional)
                 </label>
                 <input
                   type="tel"
@@ -350,7 +351,7 @@ export default function RegisterNewPage() {
               </button>
 
               <Link href="/login" className="text-center text-slate-400 hover:text-purple-300 text-sm mt-4">
-                ¿Ya tienes cuenta? Inicia sesión
+                Â¿Ya tienes cuenta? Inicia sesiÃ³n
               </Link>
             </form>
           </div>
@@ -359,7 +360,7 @@ export default function RegisterNewPage() {
         {/* PASO 2: SELECCIONAR TIPO */}
         {step === 'usertype' && (
           <div className="bg-slate-800/50 backdrop-blur border border-purple-500/20 rounded-xl p-8">
-            <h2 className="text-2xl font-bold text-white mb-2">¿Eres estudiante o empresa?</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">Â¿Eres estudiante o empresa?</h2>
             <p className="text-slate-400 mb-6">Elige tu rol para continuar</p>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
@@ -369,7 +370,7 @@ export default function RegisterNewPage() {
                 className="p-6 rounded-lg border-2 border-slate-600 hover:border-purple-500 bg-slate-700/30 hover:bg-slate-700/60 transition text-left group"
               >
                 <User className="w-8 h-8 text-purple-400 mb-3 group-hover:text-purple-300" />
-                <h3 className="font-semibold text-white mb-1">Estudiante 👨‍🎓</h3>
+                <h3 className="font-semibold text-white mb-1">Estudiante ðŸ‘¨â€ðŸŽ“</h3>
                 <p className="text-sm text-slate-400">Reserva y financia tus viajes</p>
               </button>
 
@@ -379,7 +380,7 @@ export default function RegisterNewPage() {
                 className="p-6 rounded-lg border-2 border-slate-600 hover:border-purple-500 bg-slate-700/30 hover:bg-slate-700/60 transition text-left group"
               >
                 <Building2 className="w-8 h-8 text-purple-400 mb-3 group-hover:text-purple-300" />
-                <h3 className="font-semibold text-white mb-1">Empresa 🏢</h3>
+                <h3 className="font-semibold text-white mb-1">Empresa ðŸ¢</h3>
                 <p className="text-sm text-slate-400">Ofrece viajes estudiantiles</p>
               </button>
             </div>
@@ -397,7 +398,7 @@ export default function RegisterNewPage() {
         {step === 'usertype-form' && selectedUserType && (
           <div className="bg-slate-800/50 backdrop-blur border border-purple-500/20 rounded-xl p-8">
             <h2 className="text-2xl font-bold text-white mb-6">
-              {selectedUserType === 'company' ? 'Información de Empresa' : 'Información de Estudiante'}
+              {selectedUserType === 'company' ? 'InformaciÃ³n de Empresa' : 'InformaciÃ³n de Estudiante'}
             </h2>
 
             <form onSubmit={handleTypeFormSubmit} className="space-y-4">
@@ -425,7 +426,7 @@ export default function RegisterNewPage() {
                       value={formData.businessLicense}
                       onChange={(e) => setFormData({...formData, businessLicense: e.target.value})}
                       className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-purple-500"
-                      placeholder="Número de licencia"
+                      placeholder="NÃºmero de licencia"
                     />
                   </div>
                 </>
@@ -481,7 +482,7 @@ export default function RegisterNewPage() {
         {step === 'wallet' && (
           <div className="bg-slate-800/50 backdrop-blur border border-purple-500/20 rounded-xl p-8">
             <h2 className="text-2xl font-bold text-white mb-2">Vincula tu Wallet</h2>
-            <p className="text-slate-400 mb-6">Elige cómo conectar tu wallet Stellar</p>
+            <p className="text-slate-400 mb-6">Elige cÃ³mo conectar tu wallet Stellar</p>
 
             {/* Error Message */}
             {formError && (
@@ -492,15 +493,15 @@ export default function RegisterNewPage() {
             )}
 
             <div className="space-y-4 mb-6">
-              {/* Opción 1: Freighter - Deshabilitada si no se detecta */}
+              {/* OpciÃ³n 1: Freighter - Deshabilitada si no se detecta */}
               <div className={`p-4 rounded-lg border ${!formError ? 'border-slate-600 bg-slate-700/30' : 'border-red-600/50 bg-red-700/20 opacity-60'}`}>
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-3 h-3 rounded-full bg-blue-500" />
-                  <span className="text-white font-semibold">Opción 1: Freighter</span>
+                  <span className="text-white font-semibold">OpciÃ³n 1: Freighter</span>
                   {formError && <span className="text-xs bg-red-600 text-white px-2 py-1 rounded">NO DETECTADA</span>}
                 </div>
                 <p className="text-sm text-slate-400 mb-3">
-                  Conecta automáticamente con tu extensión Freighter
+                  Conecta automÃ¡ticamente con tu extensiÃ³n Freighter
                 </p>
                 <button
                   onClick={handleConnectFreighter}
@@ -525,20 +526,20 @@ export default function RegisterNewPage() {
                 </button>
                 {formError && (
                   <p className="text-xs text-red-300 mt-3">
-                    💡 Si tienes Freighter instalada, recarga la página (F5) y vuelve a intentar. 
-                    Si el problema persiste, usa la Opción 2.
+                    ðŸ’¡ Si tienes Freighter instalada, recarga la pÃ¡gina (F5) y vuelve a intentar. 
+                    Si el problema persiste, usa la OpciÃ³n 2.
                   </p>
                 )}
               </div>
 
-              {/* Opción 2: Manual - RECOMENDADA */}
+              {/* OpciÃ³n 2: Manual - RECOMENDADA */}
               <div className="p-4 rounded-lg border-2 border-amber-500 bg-amber-700/20">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-3 h-3 rounded-full bg-amber-500" />
-                  <span className="text-white font-semibold">🟡 Opción 2: Ingresa Manual (RECOMENDADA)</span>
+                  <span className="text-white font-semibold">ðŸŸ¡ OpciÃ³n 2: Ingresa Manual (RECOMENDADA)</span>
                 </div>
                 <p className="text-sm text-amber-200 mb-3">
-                  Copia la dirección de tu wallet Stellar (comienza con G, 56 caracteres)
+                  Copia la direcciÃ³n de tu wallet Stellar (comienza con G, 56 caracteres)
                 </p>
                 <div className="space-y-3">
                   <input
@@ -572,13 +573,13 @@ export default function RegisterNewPage() {
                 </div>
               </div>
 
-              {/* Opción 3: Crear nueva */}
+              {/* OpciÃ³n 3: Crear nueva */}
               <button
                 onClick={handleCreateWallet}
                 className="w-full px-6 py-3 border border-purple-500/50 hover:border-purple-400 text-purple-300 hover:text-purple-200 font-semibold rounded-lg transition flex items-center justify-center gap-2"
               >
                 <Download className="w-4 h-4" />
-                🟣 Opción 3: Crear Nueva Wallet en Freighter
+                ðŸŸ£ OpciÃ³n 3: Crear Nueva Wallet en Freighter
               </button>
             </div>
 
@@ -591,11 +592,11 @@ export default function RegisterNewPage() {
           </div>
         )}
 
-        {/* PASO 5: ÉXITO */}
+        {/* PASO 5: Ã‰XITO */}
         {step === 'success' && (
           <div className="bg-slate-800/50 backdrop-blur border border-purple-500/20 rounded-xl p-8 text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-white mb-2">¡Bienvenido!</h2>
+            <h2 className="text-3xl font-bold text-white mb-2">Â¡Bienvenido!</h2>
             <p className="text-slate-400 mb-6">
               Tu cuenta ha sido creada exitosamente y tu wallet ha sido vinculada.
             </p>
@@ -609,4 +610,6 @@ export default function RegisterNewPage() {
     </div>
   );
 }
+
+
 

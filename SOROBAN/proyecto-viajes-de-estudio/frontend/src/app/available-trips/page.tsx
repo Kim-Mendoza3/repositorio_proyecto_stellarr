@@ -1,4 +1,6 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
+
 import React, { useEffect, useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWallet } from '@/contexts/WalletContext';
@@ -41,10 +43,10 @@ export default function AvailableTripsPage() {
     setIsInitialized(true);
   }, [router, account?.publicKey]);
 
-  // Función para refrescar viajes manualmente
+  // FunciÃ³n para refrescar viajes manualmente
   const handleRefreshTrips = async () => {
     setRefreshing(true);
-    console.log('🔄 [PAGE] Refrescando lista de viajes...');
+    console.log('ðŸ”„ [PAGE] Refrescando lista de viajes...');
     await loadAllTrips();
     setRefreshing(false);
   };
@@ -64,7 +66,7 @@ export default function AvailableTripsPage() {
 
   const handleReserveTrip = (trip: TripOffer) => {
     if (trip.currentBookings >= trip.maxParticipants) {
-      alert('Este viaje está lleno');
+      alert('Este viaje estÃ¡ lleno');
       return;
     }
     setSelectedTrip(trip);
@@ -90,10 +92,10 @@ export default function AvailableTripsPage() {
         throw new Error('Error al crear la reserva');
       }
 
-      console.log('🔄 [PAGE] Iniciando pago para reserva:', reservation.id);
+      console.log('ðŸ”„ [PAGE] Iniciando pago para reserva:', reservation.id);
 
       // Simular procesamiento de pago Stellar
-      // En producción, aquí se haría una transacción real a través de FreighterAPI
+      // En producciÃ³n, aquÃ­ se harÃ­a una transacciÃ³n real a travÃ©s de FreighterAPI
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Confirmar pago
@@ -103,7 +105,7 @@ export default function AvailableTripsPage() {
       setPaymentStatus('success');
       setReservations([...reservations, { ...reservation, status: 'completed', txHash: mockTxHash }]);
 
-      console.log('✅ [PAGE] Reserva completada. TX:', mockTxHash);
+      console.log('âœ… [PAGE] Reserva completada. TX:', mockTxHash);
 
       setTimeout(() => {
         setShowReservationModal(false);
@@ -111,7 +113,7 @@ export default function AvailableTripsPage() {
         setPaymentStatus('idle');
       }, 2000);
     } catch (error) {
-      console.error('❌ [PAGE] Error procesando reserva:', error);
+      console.error('âŒ [PAGE] Error procesando reserva:', error);
       setPaymentStatus('error');
     } finally {
       setProcessingPayment(false);
@@ -167,7 +169,7 @@ export default function AvailableTripsPage() {
             </button>
             <div>
               <h1 className="text-4xl font-bold text-white">Viajes Disponibles</h1>
-              <p className="text-gray-400">Explora y reserva tu próximo viaje de estudio</p>
+              <p className="text-gray-400">Explora y reserva tu prÃ³ximo viaje de estudio</p>
             </div>
           </div>
           <button
@@ -175,7 +177,7 @@ export default function AvailableTripsPage() {
             className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-all"
           >
             <LogOut className="w-5 h-5" />
-            Cerrar Sesión
+            Cerrar SesiÃ³n
           </button>
         </div>
 
@@ -217,7 +219,7 @@ export default function AvailableTripsPage() {
               />
             </div>
             <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">Precio máximo: {filterMaxPrice} XLM</label>
+              <label className="block text-gray-300 text-sm font-semibold mb-2">Precio mÃ¡ximo: {filterMaxPrice} XLM</label>
               <input
                 type="range"
                 min="0"
@@ -248,7 +250,7 @@ export default function AvailableTripsPage() {
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-12 border border-slate-700/50 text-center">
               <MapPin className="w-16 h-16 text-slate-600 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-white mb-2">No hay viajes disponibles</h3>
-              <p className="text-gray-400 mb-6">Intenta ajustar los filtros o vuelve más tarde</p>
+              <p className="text-gray-400 mb-6">Intenta ajustar los filtros o vuelve mÃ¡s tarde</p>
               <button
                 onClick={handleRefreshTrips}
                 disabled={refreshing || loading}
@@ -260,15 +262,15 @@ export default function AvailableTripsPage() {
 
             {/* Debug Info */}
             <div className="bg-slate-900 rounded-2xl p-6 border border-slate-700/50 text-left">
-              <h4 className="text-sm font-bold text-cyan-400 mb-3">📊 Información de Debug</h4>
+              <h4 className="text-sm font-bold text-cyan-400 mb-3">ðŸ“Š InformaciÃ³n de Debug</h4>
               <div className="text-xs text-gray-300 font-mono space-y-1">
-                <p>✓ User conectado: {currentUser?.name}</p>
-                <p>✓ Wallet: {account?.publicKey?.substring(0, 16)}...</p>
-                <p>✓ Tipo: {currentUser?.userType}</p>
-                <p>✓ Viajes cargados: {trips.length}</p>
-                <p>✓ Filtrados: {filteredTrips.length}</p>
-                <p>✓ localStorage.registered_users: {JSON.parse(localStorage.getItem('registered_users') || '[]').length} items</p>
-                <p>✓ localStorage.user_registry: {JSON.parse(localStorage.getItem('user_registry') || '[]').length} items</p>
+                <p>âœ“ User conectado: {currentUser?.name}</p>
+                <p>âœ“ Wallet: {account?.publicKey?.substring(0, 16)}...</p>
+                <p>âœ“ Tipo: {currentUser?.userType}</p>
+                <p>âœ“ Viajes cargados: {trips.length}</p>
+                <p>âœ“ Filtrados: {filteredTrips.length}</p>
+                <p>âœ“ localStorage.registered_users: {JSON.parse(localStorage.getItem('registered_users') || '[]').length} items</p>
+                <p>âœ“ localStorage.user_registry: {JSON.parse(localStorage.getItem('user_registry') || '[]').length} items</p>
               </div>
             </div>
           </div>
@@ -310,10 +312,10 @@ export default function AvailableTripsPage() {
                     {/* Highlights */}
                     <div className="mb-4 space-y-1">
                       {trip.highlights.slice(0, 2).map((h, idx) => (
-                        <p key={idx} className="text-gray-400 text-xs">✓ {h}</p>
+                        <p key={idx} className="text-gray-400 text-xs">âœ“ {h}</p>
                       ))}
                       {trip.highlights.length > 2 && (
-                        <p className="text-gray-400 text-xs">+{trip.highlights.length - 2} más</p>
+                        <p className="text-gray-400 text-xs">+{trip.highlights.length - 2} mÃ¡s</p>
                       )}
                     </div>
 
@@ -439,7 +441,7 @@ export default function AvailableTripsPage() {
                   <h3 className="text-lg font-bold text-white mb-3">{selectedTrip.name}</h3>
                   <div className="space-y-2 text-sm text-gray-300">
                     <p><span className="text-gray-400">Destino:</span> {selectedTrip.destination}</p>
-                    <p><span className="text-gray-400">Duración:</span> {selectedTrip.duration}</p>
+                    <p><span className="text-gray-400">DuraciÃ³n:</span> {selectedTrip.duration}</p>
                     <p><span className="text-gray-400">Empresa:</span> {selectedTrip.companyName}</p>
                   </div>
                 </div>
@@ -451,14 +453,14 @@ export default function AvailableTripsPage() {
                     <span className="text-2xl font-bold text-stellar">{selectedTrip.priceXLM} XLM</span>
                   </div>
                   <p className="text-xs text-gray-500">
-                    Se enviará desde tu wallet a la empresa
+                    Se enviarÃ¡ desde tu wallet a la empresa
                   </p>
                 </div>
 
                 {/* Warning */}
                 <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mb-6">
                   <p className="text-yellow-300 text-xs">
-                    ⚠️ Esta transacción se procesará en Stellar Testnet. Confirma antes de proceder.
+                    âš ï¸ Esta transacciÃ³n se procesarÃ¡ en Stellar Testnet. Confirma antes de proceder.
                   </p>
                 </div>
 
@@ -499,7 +501,7 @@ export default function AvailableTripsPage() {
                   <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Check className="w-8 h-8 text-green-400" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">¡Reserva Confirmada!</h2>
+                  <h2 className="text-2xl font-bold text-white mb-2">Â¡Reserva Confirmada!</h2>
                   <p className="text-gray-400 mb-6">Tu reserva ha sido procesada exitosamente</p>
 
                   <div className="bg-slate-800/50 rounded-lg p-4 mb-6 border border-slate-700 text-left">
@@ -511,7 +513,7 @@ export default function AvailableTripsPage() {
                   </div>
 
                   <p className="text-gray-400 text-sm">
-                    Recibirás un correo de confirmación pronto
+                    RecibirÃ¡s un correo de confirmaciÃ³n pronto
                   </p>
                 </div>
               </>
@@ -519,9 +521,9 @@ export default function AvailableTripsPage() {
               <>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">✕</span>
+                    <span className="text-2xl">âœ•</span>
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">Error en la Transacción</h2>
+                  <h2 className="text-2xl font-bold text-white mb-2">Error en la TransacciÃ³n</h2>
                   <p className="text-gray-400 mb-6">No se pudo procesar el pago. Intenta nuevamente.</p>
 
                   <button
@@ -543,6 +545,8 @@ export default function AvailableTripsPage() {
     </div>
   );
 }
+
+
 
 
 

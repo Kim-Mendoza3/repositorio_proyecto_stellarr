@@ -1,4 +1,6 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
+
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWallet } from '@/contexts/WalletContext';
@@ -48,11 +50,11 @@ export default function CompanyDashboardPage() {
   useEffect(() => {
     const user = getCurrentUser();
     if (!user || user.userType !== 'company') {
-      console.log('❌ [DASHBOARD] No es empresa o no hay usuario');
+      console.log('âŒ [DASHBOARD] No es empresa o no hay usuario');
       router.push('/login');
       return;
     }
-    console.log('✅ [DASHBOARD] Empresa encontrada:', user.companyName, 'Wallet:', user.publicKey);
+    console.log('âœ… [DASHBOARD] Empresa encontrada:', user.companyName, 'Wallet:', user.publicKey);
     setCurrentUser(user);
     loadTripOffersFromAPI(user.publicKey);
     setIsInitialized(true);
@@ -60,16 +62,16 @@ export default function CompanyDashboardPage() {
 
   const loadTripOffers = (walletKey?: string) => {
     try {
-      // Usar wallet de currentUser si está disponible
+      // Usar wallet de currentUser si estÃ¡ disponible
       const wallet = walletKey || currentUser?.publicKey || account?.publicKey;
       if (!wallet) {
-        console.error('❌ [DASHBOARD] No hay wallet disponible');
+        console.error('âŒ [DASHBOARD] No hay wallet disponible');
         return;
       }
       
-      console.log(`📋 [DASHBOARD] Cargando viajes para wallet: ${wallet.substring(0, 8)}...`);
+      console.log(`ðŸ“‹ [DASHBOARD] Cargando viajes para wallet: ${wallet.substring(0, 8)}...`);
       const data = localStorage.getItem(`company_trips_${wallet}`);
-      console.log(`📋 [DASHBOARD] Datos encontrados:`, data ? JSON.parse(data).length + ' viajes' : 'ninguno');
+      console.log(`ðŸ“‹ [DASHBOARD] Datos encontrados:`, data ? JSON.parse(data).length + ' viajes' : 'ninguno');
       
       if (data) {
         setTripOffers(JSON.parse(data));
@@ -124,7 +126,7 @@ export default function CompanyDashboardPage() {
     // Usar currentUser.publicKey como fuente de verdad
     const walletKey = currentUser?.publicKey || account?.publicKey;
     if (!walletKey) {
-      console.error('❌ [DASHBOARD] No hay wallet disponible para guardar viaje');
+      console.error('âŒ [DASHBOARD] No hay wallet disponible para guardar viaje');
       alert('Error: No hay wallet disponible');
       return;
     }
@@ -148,7 +150,7 @@ export default function CompanyDashboardPage() {
     };
 
     try {
-      console.log(`📤 [DASHBOARD] Guardando viaje en API para wallet ${walletKey.substring(0, 8)}...`);
+      console.log(`ðŸ“¤ [DASHBOARD] Guardando viaje en API para wallet ${walletKey.substring(0, 8)}...`);
       
       const response = await fetch('/api/trips', {
         method: 'POST',
@@ -161,13 +163,13 @@ export default function CompanyDashboardPage() {
       }
 
       const result = await response.json();
-      console.log(`✅ [DASHBOARD] Viaje guardado en API exitosamente`, result);
+      console.log(`âœ… [DASHBOARD] Viaje guardado en API exitosamente`, result);
 
       // Recargar viajes desde la API
       loadTripOffersFromAPI(walletKey);
       setShowModal(false);
     } catch (error) {
-      console.error('❌ [DASHBOARD] Error guardando viaje:', error);
+      console.error('âŒ [DASHBOARD] Error guardando viaje:', error);
       alert('Error al guardar el viaje. Por favor intenta de nuevo.');
     }
   };
@@ -176,16 +178,16 @@ export default function CompanyDashboardPage() {
     try {
       const wallet = walletKey || currentUser?.publicKey || account?.publicKey;
       if (!wallet) {
-        console.error('❌ [DASHBOARD] No hay wallet disponible');
+        console.error('âŒ [DASHBOARD] No hay wallet disponible');
         return;
       }
       
-      console.log(`📋 [DASHBOARD] Cargando viajes desde API para wallet: ${wallet.substring(0, 8)}...`);
+      console.log(`ðŸ“‹ [DASHBOARD] Cargando viajes desde API para wallet: ${wallet.substring(0, 8)}...`);
       const response = await fetch(`/api/trips?company=${wallet}`);
       const data = await response.json();
       
       if (data.success) {
-        console.log(`✅ [DASHBOARD] Viajes cargados: ${data.trips.length}`);
+        console.log(`âœ… [DASHBOARD] Viajes cargados: ${data.trips.length}`);
         setTripOffers(data.trips);
       }
     } catch (e) {
@@ -196,10 +198,10 @@ export default function CompanyDashboardPage() {
   };
 
   const handleDeleteTrip = async (tripId: string) => {
-    if (confirm('¿Estás seguro de que deseas eliminar esta oferta?')) {
+    if (confirm('Â¿EstÃ¡s seguro de que deseas eliminar esta oferta?')) {
       const walletKey = currentUser?.publicKey || account?.publicKey;
       if (!walletKey) {
-        console.error('❌ [DASHBOARD] No hay wallet disponible para eliminar viaje');
+        console.error('âŒ [DASHBOARD] No hay wallet disponible para eliminar viaje');
         return;
       }
       
@@ -214,11 +216,11 @@ export default function CompanyDashboardPage() {
           throw new Error(`API error: ${response.status}`);
         }
 
-        console.log(`✅ [DASHBOARD] Viaje eliminado exitosamente`);
+        console.log(`âœ… [DASHBOARD] Viaje eliminado exitosamente`);
         // Recargar viajes desde la API
         loadTripOffersFromAPI(walletKey);
       } catch (error) {
-        console.error('❌ [DASHBOARD] Error eliminando viaje:', error);
+        console.error('âŒ [DASHBOARD] Error eliminando viaje:', error);
         alert('Error al eliminar el viaje. Por favor intenta de nuevo.');
       }
     }
@@ -280,7 +282,7 @@ export default function CompanyDashboardPage() {
             className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-all"
           >
             <LogOut className="w-5 h-5" />
-            Cerrar Sesión
+            Cerrar SesiÃ³n
           </button>
         </div>
 
@@ -361,10 +363,10 @@ export default function CompanyDashboardPage() {
                     <p className="text-gray-400 text-sm">{trip.destination}</p>
                     <div className="mt-2 space-y-1">
                       {trip.highlights.slice(0, 2).map((h, idx) => (
-                        <p key={idx} className="text-gray-400 text-xs">✓ {h}</p>
+                        <p key={idx} className="text-gray-400 text-xs">âœ“ {h}</p>
                       ))}
                       {trip.highlights.length > 2 && (
-                        <p className="text-gray-400 text-xs">+{trip.highlights.length - 2} más</p>
+                        <p className="text-gray-400 text-xs">+{trip.highlights.length - 2} mÃ¡s</p>
                       )}
                     </div>
                   </div>
@@ -431,7 +433,7 @@ export default function CompanyDashboardPage() {
                   type="text"
                   value={formData.destination}
                   onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                  placeholder="ej. Ciudad de México"
+                  placeholder="ej. Ciudad de MÃ©xico"
                   className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:border-purple-500 focus:outline-none"
                   required
                 />
@@ -439,12 +441,12 @@ export default function CompanyDashboardPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-white font-semibold mb-2">Duración *</label>
+                  <label className="block text-white font-semibold mb-2">DuraciÃ³n *</label>
                   <input
                     type="text"
                     value={formData.duration}
                     onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    placeholder="ej. 5 días"
+                    placeholder="ej. 5 dÃ­as"
                     className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:border-purple-500 focus:outline-none"
                     required
                   />
@@ -487,7 +489,7 @@ export default function CompanyDashboardPage() {
               </div>
 
               <div>
-                <label className="block text-white font-semibold mb-2">Descripción</label>
+                <label className="block text-white font-semibold mb-2">DescripciÃ³n</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -498,11 +500,11 @@ export default function CompanyDashboardPage() {
               </div>
 
               <div>
-                <label className="block text-white font-semibold mb-2">Puntos destacados (uno por línea)</label>
+                <label className="block text-white font-semibold mb-2">Puntos destacados (uno por lÃ­nea)</label>
                 <textarea
                   value={formData.highlights}
                   onChange={(e) => setFormData({ ...formData, highlights: e.target.value })}
-                  placeholder="Museo de Antropología&#10;Pirámides de Teotihuacán&#10;Xochimilco"
+                  placeholder="Museo de AntropologÃ­a&#10;PirÃ¡mides de TeotihuacÃ¡n&#10;Xochimilco"
                   rows={4}
                   className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:border-purple-500 focus:outline-none font-mono text-sm"
                 />
@@ -530,6 +532,8 @@ export default function CompanyDashboardPage() {
     </div>
   );
 }
+
+
 
 
 

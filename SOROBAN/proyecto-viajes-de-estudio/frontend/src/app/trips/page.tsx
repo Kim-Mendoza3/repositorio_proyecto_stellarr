@@ -1,4 +1,6 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWallet } from '@/contexts/WalletContext';
@@ -19,29 +21,29 @@ const AVAILABLE_TRIPS: Trip[] = [
   {
     id: 'cdmx',
     name: 'Viaje a CDMX',
-    description: 'Explora la capital: Museo de Antropología, Teotihuacán y más.',
-    destination: 'Ciudad de México',
-    duration: '5 días',
+    description: 'Explora la capital: Museo de AntropologÃ­a, TeotihuacÃ¡n y mÃ¡s.',
+    destination: 'Ciudad de MÃ©xico',
+    duration: '5 dÃ­as',
     priceXLM: 50,
     image: 'bg-blue-600',
     highlights: [
-      'Museo de Antropología',
-      'Pirámides de Teotihuacán',
+      'Museo de AntropologÃ­a',
+      'PirÃ¡mides de TeotihuacÃ¡n',
       'Xochimilco',
-      'Centro Histórico',
+      'Centro HistÃ³rico',
     ],
     available: true,
   },
   {
     id: 'cancun',
-    name: 'Playas de Cancún',
-    description: 'Relájate en las mejores playas del Caribe mexicano.',
-    destination: 'Cancún, Quintana Roo',
-    duration: '7 días',
+    name: 'Playas de CancÃºn',
+    description: 'RelÃ¡jate en las mejores playas del Caribe mexicano.',
+    destination: 'CancÃºn, Quintana Roo',
+    duration: '7 dÃ­as',
     priceXLM: 75,
     image: 'bg-cyan-600',
     highlights: [
-      'Playas paradisíacas',
+      'Playas paradisÃ­acas',
       'Snorkel en cenotes',
       'Isla Mujeres',
       'Playa del Carmen',
@@ -53,30 +55,30 @@ const AVAILABLE_TRIPS: Trip[] = [
     name: 'Oaxaca Cultural',
     description: 'Descubre la riqueza cultural de Oaxaca y sus tradiciones.',
     destination: 'Oaxaca',
-    duration: '4 días',
+    duration: '4 dÃ­as',
     priceXLM: 60,
     image: 'bg-amber-700',
     highlights: [
       'Templo de Santo Domingo',
       'Mercados tradicionales',
-      'Monte Albán',
-      'Gastronomía oaxaqueña',
+      'Monte AlbÃ¡n',
+      'GastronomÃ­a oaxaqueÃ±a',
     ],
     available: true,
   },
   {
     id: 'veracruz',
-    name: 'Veracruz Histórico',
-    description: 'Conoce la historia del puerto más importante de México.',
+    name: 'Veracruz HistÃ³rico',
+    description: 'Conoce la historia del puerto mÃ¡s importante de MÃ©xico.',
     destination: 'Veracruz',
-    duration: '3 días',
+    duration: '3 dÃ­as',
     priceXLM: 40,
     image: 'bg-orange-600',
     highlights: [
-      'Castillo de San Juan de Ulúa',
-      'Malecón histórico',
+      'Castillo de San Juan de UlÃºa',
+      'MalecÃ³n histÃ³rico',
       'Museo Naval',
-      'Gastronomía local',
+      'GastronomÃ­a local',
     ],
     available: true,
   },
@@ -118,20 +120,20 @@ export default function TripsPage() {
     setProcessingTrip(selectedTrip.id);
     try {
       // Simular proceso de compra/transferencia
-      console.log('🚀 Procesando reserva:', selectedTrip.name);
-      console.log('💰 Monto:', selectedTrip.priceXLM, 'XLM');
-      console.log('👤 Desde:', account.publicKey);
-      console.log('📝 ID Reserva:', `TRIP_${Date.now()}`);
+      console.log('ðŸš€ Procesando reserva:', selectedTrip.name);
+      console.log('ðŸ’° Monto:', selectedTrip.priceXLM, 'XLM');
+      console.log('ðŸ‘¤ Desde:', account.publicKey);
+      console.log('ðŸ“ ID Reserva:', `TRIP_${Date.now()}`);
 
-      // Aquí iría la lógica de transferencia real con Freighter
+      // AquÃ­ irÃ­a la lÃ³gica de transferencia real con Freighter
       // Por ahora simulamos un delay
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      setSuccessMessage(`✅ ¡Viaje a ${selectedTrip.destination} reservado exitosamente!`);
+      setSuccessMessage(`âœ… Â¡Viaje a ${selectedTrip.destination} reservado exitosamente!`);
       setShowModal(false);
       setSelectedTrip(null);
 
-      // Limpiar mensaje después de 3 segundos
+      // Limpiar mensaje despuÃ©s de 3 segundos
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error: any) {
       alert(`Error: ${error.message}`);
@@ -148,17 +150,17 @@ export default function TripsPage() {
 
     setProcessingTrip(trip.id);
     try {
-      console.log('🎁 Donación a:', trip.name);
-      console.log('💰 Monto:', amount, 'XLM');
-      console.log('👤 Desde:', account.publicKey);
+      console.log('ðŸŽ DonaciÃ³n a:', trip.name);
+      console.log('ðŸ’° Monto:', amount, 'XLM');
+      console.log('ðŸ‘¤ Desde:', account.publicKey);
 
-      // Aquí iría la lógica de donación real
+      // AquÃ­ irÃ­a la lÃ³gica de donaciÃ³n real
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      setSuccessMessage(`✅ ¡Donación de ${amount} XLM realizada con éxito!`);
+      setSuccessMessage(`âœ… Â¡DonaciÃ³n de ${amount} XLM realizada con Ã©xito!`);
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error: any) {
-      alert(`Error en donación: ${error.message}`);
+      alert(`Error en donaciÃ³n: ${error.message}`);
     } finally {
       setProcessingTrip(null);
     }
@@ -188,7 +190,7 @@ export default function TripsPage() {
             onClick={() => router.push('/dashboard')}
             className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition"
           >
-            ← Volver
+            â† Volver
           </button>
         </div>
 
@@ -224,15 +226,15 @@ export default function TripsPage() {
 
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-sm">
-                  <span className="text-gray-500 w-24">📍 Destino:</span>
+                  <span className="text-gray-500 w-24">ðŸ“ Destino:</span>
                   <span className="text-gray-300">{trip.destination}</span>
                 </div>
                 <div className="flex items-center text-sm">
-                  <span className="text-gray-500 w-24">⏱️ Duración:</span>
+                  <span className="text-gray-500 w-24">â±ï¸ DuraciÃ³n:</span>
                   <span className="text-gray-300">{trip.duration}</span>
                 </div>
                 <div className="flex items-center text-sm">
-                  <span className="text-gray-500 w-24">💰 Precio:</span>
+                  <span className="text-gray-500 w-24">ðŸ’° Precio:</span>
                   <span className="text-cyan-400 font-bold text-lg">{trip.priceXLM} XLM</span>
                 </div>
               </div>
@@ -243,7 +245,7 @@ export default function TripsPage() {
                 <ul className="space-y-1">
                   {trip.highlights.map((highlight, idx) => (
                     <li key={idx} className="text-sm text-gray-300 flex items-center">
-                      <span className="text-cyan-400 mr-2">✓</span>
+                      <span className="text-cyan-400 mr-2">âœ“</span>
                       {highlight}
                     </li>
                   ))}
@@ -257,7 +259,7 @@ export default function TripsPage() {
                   disabled={processingTrip === trip.id || !trip.available}
                   className="w-full py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-600 text-white font-semibold rounded-lg transition"
                 >
-                  {processingTrip === trip.id ? '⏳ Procesando...' : '🎫 Reservar'}
+                  {processingTrip === trip.id ? 'â³ Procesando...' : 'ðŸŽ« Reservar'}
                 </button>
 
                 <button
@@ -265,7 +267,7 @@ export default function TripsPage() {
                   disabled={processingTrip === trip.id || account.balance < 10}
                   className="w-full py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white font-semibold rounded-lg transition"
                 >
-                  {processingTrip === trip.id ? '⏳ Procesando...' : '🎁 Donar 10 XLM'}
+                  {processingTrip === trip.id ? 'â³ Procesando...' : 'ðŸŽ Donar 10 XLM'}
                 </button>
               </div>
             </div>
@@ -302,7 +304,7 @@ export default function TripsPage() {
 
               {account.balance - selectedTrip.priceXLM >= 0 && (
                 <div className="bg-green-900/20 border border-green-500 p-4 rounded-lg">
-                  <p className="text-gray-400 text-sm">Saldo después de la compra:</p>
+                  <p className="text-gray-400 text-sm">Saldo despuÃ©s de la compra:</p>
                   <p className="text-green-400 font-semibold">
                     {(account.balance - selectedTrip.priceXLM).toFixed(2)} XLM
                   </p>
@@ -322,7 +324,7 @@ export default function TripsPage() {
                 disabled={processingTrip === selectedTrip.id}
                 className="flex-1 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-600 text-white font-semibold rounded-lg transition"
               >
-                {processingTrip === selectedTrip.id ? '⏳ Procesando...' : 'Confirmar Pago'}
+                {processingTrip === selectedTrip.id ? 'â³ Procesando...' : 'Confirmar Pago'}
               </button>
             </div>
           </div>
@@ -331,6 +333,8 @@ export default function TripsPage() {
     </div>
   );
 }
+
+
 
 
 

@@ -1,4 +1,6 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
+
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
@@ -32,10 +34,10 @@ function TripDetailContent() {
         await new Promise(resolve => setTimeout(resolve, 500));
         const tripData = getTripById(tripId);
         if (tripData) {
-          console.log('✅ Viaje encontrado:', tripId);
+          console.log('âœ… Viaje encontrado:', tripId);
           setTrip(tripData);
         } else {
-          console.error('❌ Viaje no encontrado:', tripId);
+          console.error('âŒ Viaje no encontrado:', tripId);
           setTrip(null);
         }
         setLoading(false);
@@ -46,28 +48,28 @@ function TripDetailContent() {
 
   const handleReserveTrip = async () => {
     if (!trip || !account) {
-      alert('Error: Información incompleta');
+      alert('Error: InformaciÃ³n incompleta');
       return;
     }
 
     try {
       setTransactionStatus('signing');
       setErrorMessage('');
-      console.log('🔄 Iniciando proceso de reserva...');
+      console.log('ðŸ”„ Iniciando proceso de reserva...');
 
       // 1. Obtener wallet de Freighter
       const clientWallet = await getFreighterWallet();
       if (!clientWallet) {
-        throw new Error('No se pudo obtener la wallet de Freighter. Asegúrate de tener Freighter instalado y conectado.');
+        throw new Error('No se pudo obtener la wallet de Freighter. AsegÃºrate de tener Freighter instalado y conectado.');
       }
 
-      console.log('✅ Wallet obtenida:', clientWallet.substring(0, 10) + '...');
+      console.log('âœ… Wallet obtenida:', clientWallet.substring(0, 10) + '...');
 
       // 2. Cambiar a estado "submitting" 
       setTransactionStatus('submitting');
 
-      // 3. Crear transacción de pago
-      console.log('📤 Enviando pago a empresa:', trip.companyWallet);
+      // 3. Crear transacciÃ³n de pago
+      console.log('ðŸ“¤ Enviando pago a empresa:', trip.companyWallet);
       const paymentResult = await sendPayment(
         clientWallet,
         trip.companyWallet,
@@ -76,10 +78,10 @@ function TripDetailContent() {
       );
 
       if (!paymentResult.success) {
-        throw new Error(paymentResult.error || 'Error en la transacción de pago');
+        throw new Error(paymentResult.error || 'Error en la transacciÃ³n de pago');
       }
 
-      console.log('✅ Pago completado:', paymentResult.hash);
+      console.log('âœ… Pago completado:', paymentResult.hash);
       if (paymentResult.hash) {
         setTransactionHash(paymentResult.hash);
       }
@@ -88,7 +90,7 @@ function TripDetailContent() {
       setTransactionStatus('registering');
 
       // 5. Guardar reserva en la API
-      console.log('📝 Registrando reserva...');
+      console.log('ðŸ“ Registrando reserva...');
       const reservationResponse = await fetch('/api/reservations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -103,16 +105,16 @@ function TripDetailContent() {
       });
 
       if (!reservationResponse.ok) {
-        throw new Error('Error guardando la reserva. El pago fue procesado pero la reserva no se guardó.');
+        throw new Error('Error guardando la reserva. El pago fue procesado pero la reserva no se guardÃ³.');
       }
 
       const reservationData = await reservationResponse.json();
-      console.log('✅ Reserva registrada:', reservationData);
+      console.log('âœ… Reserva registrada:', reservationData);
 
       setTransactionStatus('success');
     } catch (err: any) {
       const message = err instanceof Error ? err.message : String(err);
-      console.error('❌ Error:', message);
+      console.error('âŒ Error:', message);
       setErrorMessage(message);
       setTransactionStatus('error');
     }
@@ -193,11 +195,11 @@ function TripDetailContent() {
               <h2 className="text-xl font-bold text-white mb-4">Detalles</h2>
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-gray-400">Duración</p>
+                  <p className="text-sm text-gray-400">DuraciÃ³n</p>
                   <p className="text-white font-semibold">{trip.duration}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Descripción</p>
+                  <p className="text-sm text-gray-400">DescripciÃ³n</p>
                   <p className="text-white">{trip.description}</p>
                 </div>
                 <div>
@@ -240,20 +242,20 @@ function TripDetailContent() {
                     <div className="bg-blue-900 text-blue-200 p-4 rounded-lg">
                       <div className="flex items-center gap-3 mb-4">
                         <Zap className="w-5 h-5 animate-pulse" />
-                        <span className="font-bold">Procesando transacción Stellar...</span>
+                        <span className="font-bold">Procesando transacciÃ³n Stellar...</span>
                       </div>
                       <div className="space-y-2 text-sm">
                         <div className={`flex items-center gap-2 ${transactionStatus === 'signing' ? 'text-blue-300' : 'text-blue-400'}`}>
                           <div className={`w-2 h-2 rounded-full ${transactionStatus === 'signing' ? 'animate-pulse bg-blue-300' : 'bg-green-400'}`} />
-                          {transactionStatus === 'signing' ? '🔐 Esperando firma en Freighter...' : '✓ Firmada'}
+                          {transactionStatus === 'signing' ? 'ðŸ” Esperando firma en Freighter...' : 'âœ“ Firmada'}
                         </div>
                         <div className={`flex items-center gap-2 ${transactionStatus === 'submitting' ? 'text-blue-300' : transactionStatus === 'signing' ? 'text-gray-400' : 'text-blue-400'}`}>
                           <div className={`w-2 h-2 rounded-full ${transactionStatus === 'submitting' ? 'animate-pulse bg-blue-300' : transactionStatus === 'signing' ? 'bg-gray-500' : 'bg-green-400'}`} />
-                          {transactionStatus === 'submitting' ? '📤 Enviando a blockchain...' : transactionStatus === 'signing' ? 'Enviando...' : '✓ Enviada'}
+                          {transactionStatus === 'submitting' ? 'ðŸ“¤ Enviando a blockchain...' : transactionStatus === 'signing' ? 'Enviando...' : 'âœ“ Enviada'}
                         </div>
                         <div className={`flex items-center gap-2 ${transactionStatus === 'registering' ? 'text-blue-300' : transactionStatus !== 'signing' ? 'text-blue-400' : 'text-gray-400'}`}>
                           <div className={`w-2 h-2 rounded-full ${transactionStatus === 'registering' ? 'animate-pulse bg-blue-300' : transactionStatus !== 'signing' && transactionStatus !== 'submitting' ? 'bg-green-400' : 'bg-gray-500'}`} />
-                          {transactionStatus === 'registering' ? '📝 Registrando reserva...' : '⏳ Registrando...'}
+                          {transactionStatus === 'registering' ? 'ðŸ“ Registrando reserva...' : 'â³ Registrando...'}
                         </div>
                       </div>
                     </div>
@@ -264,7 +266,7 @@ function TripDetailContent() {
                   <div className="flex items-start gap-3 bg-green-900 text-green-200 p-4 rounded-lg">
                     <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-bold">¡Reserva exitosa!</p>
+                      <p className="font-bold">Â¡Reserva exitosa!</p>
                       <p className="text-sm mt-2">Tu pago de {trip.priceXLM} XLM ha sido procesado correctamente.</p>
                       <p className="text-xs text-green-300 mt-2 break-all">Hash: {transactionHash}</p>
                       <button
@@ -281,7 +283,7 @@ function TripDetailContent() {
                   <div className="flex items-start gap-3 bg-red-900 text-red-200 p-4 rounded-lg">
                     <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-bold">Error en la transacción</p>
+                      <p className="font-bold">Error en la transacciÃ³n</p>
                       <p className="text-sm mt-1">{errorMessage}</p>
                       <button
                         onClick={() => {
@@ -298,9 +300,9 @@ function TripDetailContent() {
               </div>
 
               <div className="bg-slate-700 rounded-lg p-4 text-sm text-gray-300">
-                <p>💡 Se requiere Freighter Wallet conectada para realizar la reserva.</p>
+                <p>ðŸ’¡ Se requiere Freighter Wallet conectada para realizar la reserva.</p>
                 <p className="text-xs text-gray-400 mt-2">
-                  ¿No tienes Freighter? <a href="https://freighter.app" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Descargar aquí</a>
+                  Â¿No tienes Freighter? <a href="https://freighter.app" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Descargar aquÃ­</a>
                 </p>
               </div>
             </div>
@@ -318,6 +320,8 @@ export default function TripDetailPage() {
     </Suspense>
   );
 }
+
+
 
 
 

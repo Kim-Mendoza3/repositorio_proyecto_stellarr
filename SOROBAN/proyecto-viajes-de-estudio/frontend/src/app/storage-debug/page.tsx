@@ -1,4 +1,6 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader, RefreshCw, Trash2, Download, Copy, Check } from 'lucide-react';
@@ -77,14 +79,14 @@ export default function DiagnosticsPage() {
   };
 
   const handleClearStorage = () => {
-    if (confirm('⚠️ ¿Estás seguro de que quieres limpiar TODO el localStorage?')) {
+    if (confirm('âš ï¸ Â¿EstÃ¡s seguro de que quieres limpiar TODO el localStorage?')) {
       localStorage.clear();
       setRefreshCount(prev => prev + 1);
     }
   };
 
   const handleDeleteKey = (key: string) => {
-    if (confirm(`¿Eliminar ${key}?`)) {
+    if (confirm(`Â¿Eliminar ${key}?`)) {
       localStorage.removeItem(key);
       setRefreshCount(prev => prev + 1);
     }
@@ -129,7 +131,7 @@ export default function DiagnosticsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">🔧 Diagnósticos</h1>
+            <h1 className="text-4xl font-bold text-white mb-2">ðŸ”§ DiagnÃ³sticos</h1>
             <p className="text-gray-400">LocalStorage Inspector</p>
           </div>
           <div className="flex gap-2">
@@ -291,13 +293,15 @@ export default function DiagnosticsPage() {
             onClick={() => router.back()}
             className="text-gray-400 hover:text-gray-300 transition-all"
           >
-            ← Volver
+            â† Volver
           </button>
         </div>
       </div>
     </div>
   );
 }
+
+
 
 
 

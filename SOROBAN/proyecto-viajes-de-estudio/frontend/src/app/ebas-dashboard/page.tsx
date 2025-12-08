@@ -1,4 +1,6 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Car, Smartphone, Bike, ArrowRight } from 'lucide-react';
@@ -49,7 +51,7 @@ export default function EBASDashboard() {
                   Conectar
                 </button>
               ) : (
-                <div className="text-green-400 font-semibold">✓ Conectado</div>
+                <div className="text-green-400 font-semibold">âœ“ Conectado</div>
               )}
             </div>
           ))}
@@ -68,6 +70,8 @@ export default function EBASDashboard() {
     </div>
   );
 }
+
+
 
 
 

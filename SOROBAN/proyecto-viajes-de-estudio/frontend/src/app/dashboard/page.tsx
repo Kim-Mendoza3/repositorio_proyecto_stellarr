@@ -1,4 +1,6 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWallet } from '@/contexts/WalletContext';
@@ -19,7 +21,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setIsInitialized(true);
-    // Verificar si hay sesión activa
+    // Verificar si hay sesiÃ³n activa
     const walletAddress = localStorage.getItem('walletAddress');
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     
@@ -72,7 +74,7 @@ export default function DashboardPage() {
             className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-all"
           >
             <LogOut className="w-5 h-5" />
-            Cerrar Sesión
+            Cerrar SesiÃ³n
           </button>
         </div>
 
@@ -82,14 +84,14 @@ export default function DashboardPage() {
           <div className="lg:col-span-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-slate-700/50 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
               <Wallet className="w-6 h-6 text-stellar" />
-              Información de Wallet
+              InformaciÃ³n de Wallet
             </h2>
 
             <div className="space-y-4">
               {/* Address */}
               <div>
                 <label className="text-sm font-semibold text-gray-400 mb-2 block">
-                  Dirección de Wallet
+                  DirecciÃ³n de Wallet
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -138,9 +140,9 @@ export default function DashboardPage() {
               {/* Network Info */}
               <div className="bg-blue-500/10 border border-blue-400/30 rounded-lg p-4">
                 <p className="text-blue-300 text-sm">
-                  ✓ Conectado a Stellar Testnet<br/>
-                  ✓ Freighter wallet activa<br/>
-                  ✓ Listo para realizar transacciones
+                  âœ“ Conectado a Stellar Testnet<br/>
+                  âœ“ Freighter wallet activa<br/>
+                  âœ“ Listo para realizar transacciones
                 </p>
               </div>
             </div>
@@ -150,7 +152,7 @@ export default function DashboardPage() {
           <div className="space-y-4">
             {/* Available Trips */}
             <div className="bg-gradient-to-br from-stellar/20 to-cyan-500/20 rounded-2xl p-6 border border-stellar/30 shadow-xl">
-              <h3 className="text-lg font-bold text-white mb-4">🌍 Viajes Disponibles</h3>
+              <h3 className="text-lg font-bold text-white mb-4">ðŸŒ Viajes Disponibles</h3>
               <p className="text-gray-300 text-sm mb-4">
                 Explora viajes de estudio ofrecidos por empresas. Reserva y paga con tu wallet.
               </p>
@@ -176,7 +178,7 @@ export default function DashboardPage() {
 
             {/* Settings */}
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border border-slate-700/50 shadow-xl">
-              <h3 className="text-lg font-bold text-white mb-4">Configuración</h3>
+              <h3 className="text-lg font-bold text-white mb-4">ConfiguraciÃ³n</h3>
               <p className="text-gray-400 text-sm mb-4">
                 Administra tu perfil y preferencias.
               </p>
@@ -220,12 +222,12 @@ export default function DashboardPage() {
                     <div className="p-6">
                       <h3 className="text-lg font-bold text-white mb-2">{trip.destination}</h3>
                       <p className="text-gray-400 text-sm mb-4">
-                        {trip.description || 'Descubre este increíble destino de estudio'}
+                        {trip.description || 'Descubre este increÃ­ble destino de estudio'}
                       </p>
                       <div className="flex items-center justify-between mb-4">
                         <span className={`text-2xl font-bold text-${color.text}`}>{trip.priceXLM} XLM</span>
                         <span className={`text-xs bg-${color.border}/20 text-${color.text} px-3 py-1 rounded-full`}>
-                          {trip.duration || 3} días
+                          {trip.duration || 3} dÃ­as
                         </span>
                       </div>
                       <button 
@@ -290,6 +292,8 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+
 
 
 
