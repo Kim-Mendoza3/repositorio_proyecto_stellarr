@@ -1,15 +1,18 @@
-# Excluir todo excepto el frontend
-*
-!SOROBAN/
-SOROBAN/*
-!SOROBAN/proyecto-viajes-de-estudio/
-SOROBAN/proyecto-viajes-de-estudio/*
-!SOROBAN/proyecto-viajes-de-estudio/frontend/
-!SOROBAN/proyecto-viajes-de-estudio/package.json
-!SOROBAN/proyecto-viajes-de-estudio/vercel.json
-!SOROBAN/proyecto-viajes-de-estudio/.npmrc
+# Excluir archivos de raíz que no son necesarios
+*.md
+*.txt
+Informe de Viabilidad.md
+Justificacion.md
+Matriz de Riesgos.md
+PlanComunicacion.md
+Presupuesto.md
+PROYECTO-COMPLETO-RESUMEN.md
+README.md
+Tablero.md
+DOCUMENTACION-INDEX.md
+netlify.toml
 
-# Excluir carpetas grandes
+# Excluir carpetas innecesarias en SOROBAN
 SOROBAN/proyecto-viajes-de-estudio/stellar/
 SOROBAN/proyecto-viajes-de-estudio/contract/
 SOROBAN/proyecto-viajes-de-estudio/mcp-servers/
@@ -19,11 +22,8 @@ SOROBAN/proyecto-viajes-de-estudio/*.md
 SOROBAN/proyecto-viajes-de-estudio/*.txt
 SOROBAN/proyecto-viajes-de-estudio/*.sh
 
-# Node modules
-**/node_modules/
-**/package-lock.json
-
-# Cache
-.next/
+# Excluir .git
 .git/
-.DS_Store
+
+# Excluir node_modules
+**/node_modules/
