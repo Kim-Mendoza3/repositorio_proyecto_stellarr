@@ -8,8 +8,8 @@
   # Base directory (where package.json is)
   base = "SOROBAN/proyecto-viajes-de-estudio/frontend"
   
-  # Build command with legacy-peer-deps for safety
-  command = "npm install --legacy-peer-deps && npm run build"
+  # Build command: install with devDependencies, then build
+  command = "npm install --legacy-peer-deps --include=dev && npm run build"
   
   # Let plugin-nextjs handle the output
   publish = ".next"
