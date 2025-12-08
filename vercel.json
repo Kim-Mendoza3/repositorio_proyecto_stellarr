@@ -1,0 +1,5 @@
+{
+  "root": "SOROBAN/proyecto-viajes-de-estudio/frontend",
+  "framework": "nextjs",
+  "nodeVersion": "22.19.0"
+}

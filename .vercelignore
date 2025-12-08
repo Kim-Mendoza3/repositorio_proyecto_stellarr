@@ -1,0 +1,29 @@
+# Excluir todo excepto el frontend
+*
+!SOROBAN/
+SOROBAN/*
+!SOROBAN/proyecto-viajes-de-estudio/
+SOROBAN/proyecto-viajes-de-estudio/*
+!SOROBAN/proyecto-viajes-de-estudio/frontend/
+!SOROBAN/proyecto-viajes-de-estudio/package.json
+!SOROBAN/proyecto-viajes-de-estudio/vercel.json
+!SOROBAN/proyecto-viajes-de-estudio/.npmrc
+
+# Excluir carpetas grandes
+SOROBAN/proyecto-viajes-de-estudio/stellar/
+SOROBAN/proyecto-viajes-de-estudio/contract/
+SOROBAN/proyecto-viajes-de-estudio/mcp-servers/
+SOROBAN/proyecto-viajes-de-estudio/scripts/
+SOROBAN/proyecto-viajes-de-estudio/data/
+SOROBAN/proyecto-viajes-de-estudio/*.md
+SOROBAN/proyecto-viajes-de-estudio/*.txt
+SOROBAN/proyecto-viajes-de-estudio/*.sh
+
+# Node modules
+**/node_modules/
+**/package-lock.json
+
+# Cache
+.next/
+.git/
+.DS_Store
