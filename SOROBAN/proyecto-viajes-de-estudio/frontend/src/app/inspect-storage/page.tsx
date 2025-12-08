@@ -1,8 +1,4 @@
-'use client'
-
-// Force dynamic rendering to prevent SSG errors
-export const dynamic = 'force-dynamic';
-
+'use client';
 import { useEffect, useState } from 'react';
 
 export default function InspectStoragePage() {
@@ -65,4 +61,8 @@ export default function InspectStoragePage() {
     </div>
   );
 }
+
+
+
+
 

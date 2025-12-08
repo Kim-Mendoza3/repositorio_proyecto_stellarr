@@ -1,7 +1,4 @@
-'use client'
-
-// Force dynamic rendering to prevent SSG errors
-export const dynamic = 'force-dynamic';
+'use client';
 
 import { useRouter } from 'next/navigation';
 import { CheckCircle, Home } from 'lucide-react';
@@ -39,4 +36,6 @@ export default function EBASSuccess() {
     </div>
   );
 }
+
+
 

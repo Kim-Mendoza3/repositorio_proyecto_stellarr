@@ -1,7 +1,4 @@
-'use client'
-
-// Force dynamic rendering to prevent SSG errors
-export const dynamic = 'force-dynamic';
+'use client';
 
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
@@ -35,4 +32,7 @@ export default function EBASCredit() {
     </Suspense>
   );
 }
+
+
+
 

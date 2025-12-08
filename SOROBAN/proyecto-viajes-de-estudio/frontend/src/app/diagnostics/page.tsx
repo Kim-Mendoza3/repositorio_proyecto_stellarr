@@ -1,8 +1,4 @@
-'use client'
-
-// Force dynamic rendering to prevent SSG errors
-export const dynamic = 'force-dynamic';
-
+'use client';
 import { useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle, Copy, ExternalLink } from 'lucide-react';
 
@@ -226,4 +222,8 @@ export default function DiagnosticsPage() {
     </div>
   );
 }
+
+
+
+
 

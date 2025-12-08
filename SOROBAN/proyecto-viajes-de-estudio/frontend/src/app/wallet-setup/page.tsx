@@ -1,8 +1,4 @@
-'use client'
-
-// Force dynamic rendering to prevent SSG errors
-export const dynamic = 'force-dynamic';
-
+'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Download, CheckCircle, AlertCircle, Loader } from 'lucide-react';
@@ -213,4 +209,8 @@ export default function WalletSetupPage() {
     </div>
   );
 }
+
+
+
+
 

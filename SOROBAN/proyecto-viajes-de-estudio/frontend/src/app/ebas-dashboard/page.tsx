@@ -1,8 +1,4 @@
-'use client'
-
-// Force dynamic rendering to prevent SSG errors
-export const dynamic = 'force-dynamic';
-
+'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Car, Smartphone, Bike, ArrowRight } from 'lucide-react';
@@ -72,4 +68,8 @@ export default function EBASDashboard() {
     </div>
   );
 }
+
+
+
+
 

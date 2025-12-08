@@ -1,8 +1,4 @@
-'use client'
-
-// Force dynamic rendering to prevent SSG errors
-export const dynamic = 'force-dynamic';
-
+'use client';
 import { useState } from 'react';
 import { useUserRegistry } from '@/hooks/useUserRegistry';
 import { Play, RotateCcw, Eye, AlertCircle } from 'lucide-react';
@@ -240,4 +236,8 @@ export default function TestRegistrationPage() {
     </div>
   );
 }
+
+
+
+
 
