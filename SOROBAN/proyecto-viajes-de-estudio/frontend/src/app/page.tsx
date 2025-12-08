@@ -1,5 +1,8 @@
 "use client";
 
+// Force dynamic rendering to prevent SSG errors with useContext
+export const dynamic = 'force-dynamic';
+
 import React from "react";
 import HeroCarousel from "@/components/HeroCarousel";
 

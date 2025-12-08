@@ -2,6 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   
+  // Disable static generation for pages using Context
+  // This prevents build-time errors with useContext in Server Components
+  experimental: {
+    isrMemoryCacheSize: 0, // Disable caching during build
+  },
+  
   // Enable WebAuthn/Passkey support
   async headers() {
     return [

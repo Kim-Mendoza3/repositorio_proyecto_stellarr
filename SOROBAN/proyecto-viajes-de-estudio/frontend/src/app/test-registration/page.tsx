@@ -1,4 +1,7 @@
-'use client';
+'use client'
+
+// Force dynamic rendering to prevent SSG errors
+export const dynamic = 'force-dynamic';
 
 import { useState } from 'react';
 import { useUserRegistry } from '@/hooks/useUserRegistry';
@@ -237,3 +240,4 @@ export default function TestRegistrationPage() {
     </div>
   );
 }
+

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { WalletProvider } from "@/contexts/WalletContext";
-import { SorobanProvider } from "@/contexts/SorobanContext";
+import ClientLayout from "./layout-client";
 
 export const metadata: Metadata = {
   title: "StudyTrips Global - Financiamiento de viajes de estudio",
@@ -32,13 +31,9 @@ export default function RootLayout({
         }} />
       </head>
       <body className="antialiased min-h-screen font-sans">
-        <WalletProvider>
-          <SorobanProvider>
-            <div>
-              {children}
-            </div>
-          </SorobanProvider>
-        </WalletProvider>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );

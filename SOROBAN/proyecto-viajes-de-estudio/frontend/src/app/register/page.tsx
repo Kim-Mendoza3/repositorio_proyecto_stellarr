@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic rendering to prevent SSG errors with useContext
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWallet } from '@/contexts/WalletContext';

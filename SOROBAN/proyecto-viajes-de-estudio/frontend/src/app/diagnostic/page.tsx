@@ -1,4 +1,7 @@
-'use client';
+'use client'
+
+// Force dynamic rendering to prevent SSG errors
+export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 
@@ -125,3 +128,4 @@ export default function DiagnosticPage() {
     </div>
   );
 }
+

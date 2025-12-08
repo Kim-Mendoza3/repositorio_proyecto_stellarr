@@ -1,4 +1,7 @@
-'use client';
+'use client'
+
+// Force dynamic rendering to prevent SSG errors
+export const dynamic = 'force-dynamic';
 
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -319,3 +322,4 @@ export default function TripDetailPage() {
     </Suspense>
   );
 }
+

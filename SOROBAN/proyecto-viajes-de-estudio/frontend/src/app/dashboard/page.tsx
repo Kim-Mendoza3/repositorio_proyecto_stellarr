@@ -1,4 +1,7 @@
-'use client';
+'use client'
+
+// Force dynamic rendering to prevent SSG errors
+export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -291,3 +294,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
