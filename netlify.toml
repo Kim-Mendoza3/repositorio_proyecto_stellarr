@@ -1,6 +1,9 @@
 # Netlify Configuration - Viajes de Estudio dApp
 # Next.js 14 + Stellar Blockchain Integration
 
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 [build]
   # Base directory (where package.json is)
   base = "SOROBAN/proyecto-viajes-de-estudio/frontend"
@@ -8,7 +11,7 @@
   # Build command with legacy-peer-deps for safety
   command = "npm install --legacy-peer-deps && npm run build"
   
-  # Output directory (where .next folder is)
+  # Let plugin-nextjs handle the output
   publish = ".next"
   
   # Include Node modules in cache (faster builds)
