@@ -40,30 +40,69 @@ export const useFreighterWallet = () => {
   const [error, setError] = useState<string | null>(null);
   const [transactions, setTransactions] = useState<PendingTransaction[]>([]);
   const [freighterAvailable, setFreighterAvailable] = useState(false);
+  const [isCheckingFreighter, setIsCheckingFreighter] = useState(true); // Nuevo estado
 
   useEffect(() => {
     const checkFreighter = async () => {
-      try {
-        console.log('🔍 [HOOK] Verificando disponibilidad de Freighter usando API importada...');
-        console.log('🔍 [HOOK] FreighterAPI disponible:', !!FreighterAPI);
-        console.log('🔍 [HOOK] FreighterAPI.getAddress disponible:', !!FreighterAPI?.getAddress);
-        
-        // Freighter 6+ API: simplemente intentar llamar a getAddress
-        const addressResult = await FreighterAPI.getAddress();
-        console.log('🔍 [HOOK] Resultado de getAddress:', addressResult);
-        
-        const address = typeof addressResult === 'string' ? addressResult : addressResult?.address;
-        if (address) {
-          console.log('✅ [HOOK] Freighter está disponible, dirección:', address.substring(0, 10) + '...');
-          setFreighterAvailable(true);
+      setIsCheckingFreighter(true);
+      let retries = 0;
+      const maxRetries = 5;
+      const delays = [500, 1000, 2000, 3000, 5000]; // Aumentar delays progresivamente
+
+      const attemptCheck = async () => {
+        try {
+          console.log(`🔍 [HOOK] Verificando Freighter (intento ${retries + 1}/${maxRetries})...`);
+          console.log('🔍 [HOOK] FreighterAPI disponible:', !!FreighterAPI);
+          console.log('🔍 [HOOK] FreighterAPI.getAddress disponible:', !!FreighterAPI?.getAddress);
+          
+          // Freighter 6+ API: simplemente intentar llamar a getAddress
+          // Usar un timeout para no esperar indefinidamente
+          const addressPromise = FreighterAPI.getAddress();
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Timeout')), 2000)
+          );
+          
+          const addressResult = await Promise.race([addressPromise, timeoutPromise]);
+          console.log('🔍 [HOOK] Resultado de getAddress:', addressResult);
+          
+          const address = typeof addressResult === 'string' ? addressResult : (addressResult as any)?.address;
+          if (address) {
+            console.log('✅ [HOOK] Freighter está disponible, dirección:', address.substring(0, 10) + '...');
+            setFreighterAvailable(true);
+            return true;
+          } else {
+            console.log('ℹ️ [HOOK] Freighter respondió pero sin dirección (no conectado)');
+            setFreighterAvailable(true); // API está disponible aunque no esté conectado
+            return true;
+          }
+        } catch (err: any) {
+          const errorMsg = err?.message || String(err);
+          console.log(`ℹ️ [HOOK] Intento ${retries + 1} falló:`, errorMsg.substring(0, 100));
+          
+          if (retries < maxRetries - 1) {
+            const delay = delays[retries] || 5000;
+            console.log(`⏱️ [HOOK] Reintentando en ${delay}ms...`);
+            return false;
+          }
+          
+          console.log('❌ [HOOK] Freighter no disponible después de todos los intentos');
+          setFreighterAvailable(false);
+          return true; // Stop retrying
         }
-      } catch (err: any) {
-        // getAddress fallará si Freighter no está conectado, pero eso es normal
-        const errorMsg = err?.message || String(err);
-        console.log('ℹ️ [HOOK] Freighter no está conectado todavía (error esperado en mount):', errorMsg.substring(0, 100));
-        console.log('ℹ️ [HOOK] Tipo de error:', err?.constructor?.name);
-        setFreighterAvailable(false);
+      };
+
+      // Loop de reintentos
+      while (retries < maxRetries) {
+        const success = await attemptCheck();
+        if (success) break;
+        
+        const delay = delays[retries] || 5000;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        retries++;
       }
+
+      // Marcar que se terminó la verificación
+      setIsCheckingFreighter(false);
     };
 
     checkFreighter();
@@ -293,6 +332,7 @@ export const useFreighterWallet = () => {
     error,
     transactions,
     freighterAvailable,
+    isCheckingFreighter,
     connectWallet,
     disconnectWallet,
     buyTrip,

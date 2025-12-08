@@ -14,17 +14,13 @@ import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { account, freighterAvailable, isConnecting, connectWallet, error } = useWallet();
+  const { account, freighterAvailable, isConnecting, connectWallet, error, isCheckingFreighter } = useWallet();
   const [isInitialized, setIsInitialized] = useState(false);
-  const [showFreighterWarning, setShowFreighterWarning] = useState(false);
 
   // Verificar estado inicial de Freighter
   useEffect(() => {
     setIsInitialized(true);
-    if (!freighterAvailable && !isConnecting) {
-      setShowFreighterWarning(true);
-    }
-  }, [freighterAvailable, isConnecting]);
+  }, []);
 
   // Si ya está conectado, guardar sesión y redirigir
   useEffect(() => {
@@ -95,7 +91,7 @@ export default function LoginPage() {
           )}
 
           {/* Warning - Freighter Not Available */}
-          {!account && showFreighterWarning && !isConnecting && (
+          {!account && !freighterAvailable && !isCheckingFreighter && !isConnecting && (
             <div className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 backdrop-blur-md rounded-2xl p-8 border border-amber-400/40 shadow-xl">
               <div className="flex items-start gap-4 mb-4">
                 <AlertCircle className="w-8 h-8 text-amber-400 flex-shrink-0 mt-1" />
@@ -114,6 +110,16 @@ export default function LoginPage() {
                 <Wallet className="w-5 h-5" />
                 Configurar Freighter
               </button>
+            </div>
+          )}
+
+          {/* Loading - Detecting Freighter */}
+          {!account && isCheckingFreighter && (
+            <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-md rounded-2xl p-8 border border-blue-400/40 shadow-xl text-center">
+              <Loader className="w-8 h-8 animate-spin mx-auto text-blue-400 mb-3" />
+              <h2 className="text-lg font-bold text-white mb-2">Detectando Freighter...</h2>
+              <p className="text-blue-200 text-sm">Por favor espera mientras se busca tu extensión de wallet</p>
+              <p className="text-blue-100 text-xs mt-4 opacity-70">Esto puede tardar hasta 15 segundos</p>
             </div>
           )}
 

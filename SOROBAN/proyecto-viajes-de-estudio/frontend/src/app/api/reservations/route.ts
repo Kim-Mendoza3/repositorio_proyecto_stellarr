@@ -2,13 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Use /tmp in Netlify (serverless), fallback to data/ in local dev
+const isNetlify = process.env.NETLIFY === 'true';
+const DATA_DIR = isNetlify 
+  ? '/tmp/viajar-data' 
+  : path.join(process.cwd(), 'data');
 const RESERVATIONS_FILE = path.join(DATA_DIR, 'reservations.json');
+
+console.log(`[RESERVATIONS API] Using DATA_DIR: ${DATA_DIR} (Netlify: ${isNetlify})`);
 
 // Asegurar que el directorio de datos existe
 function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+      console.log(`[RESERVATIONS API] Created DATA_DIR: ${DATA_DIR}`);
+    }
+  } catch (error) {
+    console.error(`[RESERVATIONS API] Error creating DATA_DIR:`, error);
+    throw error;
   }
 }
 
@@ -41,13 +53,18 @@ function saveReservations(reservations: any[]) {
 
 export async function POST(req: NextRequest) {
   try {
+    console.log('[POST /api/reservations] Request received');
     const body = await req.json();
-    const { tripId, clientWallet, companyWallet, amount } = body;
+    console.log('[POST /api/reservations] Body:', body);
+    
+    const { tripId, clientWallet, companyWallet, amount, txHash, status } = body;
 
+    // Validar campos requeridos
     if (!tripId || !clientWallet || !companyWallet || !amount) {
+      console.warn('[POST /api/reservations] Missing required fields:', { tripId, clientWallet, companyWallet, amount });
       return NextResponse.json({
         success: false,
-        message: 'Missing required fields'
+        message: 'Missing required fields: tripId, clientWallet, companyWallet, amount'
       }, { status: 400 });
     }
 
@@ -57,52 +74,48 @@ export async function POST(req: NextRequest) {
       clientWallet,
       companyWallet,
       amount,
-      status: 'pending',
+      txHash: txHash || null,
+      status: status || 'pending',
       createdAt: new Date().toISOString(),
     };
 
+    console.log('[POST /api/reservations] Creating reservation:', reservation);
+    
+    ensureDataDir();
     const reservations = readReservations();
     reservations.push(reservation);
     saveReservations(reservations);
-
-    // Actualizar booking count en el viaje
-    const TRIPS_FILE = path.join(DATA_DIR, 'trips.json');
-    if (fs.existsSync(TRIPS_FILE)) {
-      const tripsData = fs.readFileSync(TRIPS_FILE, 'utf-8');
-      let trips = JSON.parse(tripsData);
-      
-      trips = trips.map((trip: any) => {
-        if (trip.id === tripId) {
-          return { ...trip, currentBookings: (trip.currentBookings || 0) + 1 };
-        }
-        return trip;
-      });
-
-      fs.writeFileSync(TRIPS_FILE, JSON.stringify(trips, null, 2));
-    }
+    
+    console.log('[POST /api/reservations] Reservation saved successfully');
 
     return NextResponse.json({
       success: true,
-      reservation
-    });
+      reservation,
+      message: 'Reservation created successfully'
+    }, { status: 201 });
   } catch (error) {
-    console.error('POST /api/reservations error:', error);
+    console.error('[POST /api/reservations] Error:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json({
       success: false,
-      message: String(error)
+      message: `Server error: ${errorMessage}`
     }, { status: 500 });
   }
 }
 
 export async function GET(req: NextRequest) {
   try {
+    console.log('[GET /api/reservations] Request received');
     const { searchParams } = new URL(req.url);
     const clientWallet = searchParams.get('clientWallet');
 
+    ensureDataDir();
     const reservations = readReservations();
+    console.log('[GET /api/reservations] Total reservations:', reservations.length);
 
     if (clientWallet) {
       const filtered = reservations.filter((r: any) => r.clientWallet === clientWallet);
+      console.log(`[GET /api/reservations] Filtered for wallet ${clientWallet.slice(0,10)}...: ${filtered.length} reservations`);
       return NextResponse.json({
         success: true,
         reservations: filtered,
@@ -116,7 +129,7 @@ export async function GET(req: NextRequest) {
       count: reservations.length
     });
   } catch (error) {
-    console.error('GET /api/reservations error:', error);
+    console.error('[GET /api/reservations] Error:', error);
     return NextResponse.json({
       success: false,
       message: String(error)
@@ -126,19 +139,23 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
+    console.log('[PATCH /api/reservations] Request received');
     const body = await req.json();
     const { reservationId, clientWallet, txHash } = body;
 
     if (!reservationId || !clientWallet || !txHash) {
+      console.warn('[PATCH /api/reservations] Missing required fields');
       return NextResponse.json({
         success: false,
-        message: 'Missing required fields'
+        message: 'Missing required fields: reservationId, clientWallet, txHash'
       }, { status: 400 });
     }
 
+    ensureDataDir();
     const reservations = readReservations();
     const updated = reservations.map((r: any) => {
       if (r.id === reservationId && r.clientWallet === clientWallet) {
+        console.log('[PATCH /api/reservations] Updating reservation with txHash');
         return {
           ...r,
           status: 'completed',
@@ -149,13 +166,14 @@ export async function PATCH(req: NextRequest) {
     });
 
     saveReservations(updated);
+    console.log('[PATCH /api/reservations] Reservation updated successfully');
 
     return NextResponse.json({
       success: true,
       message: 'Reservation updated'
     });
   } catch (error) {
-    console.error('PATCH /api/reservations error:', error);
+    console.error('[PATCH /api/reservations] Error:', error);
     return NextResponse.json({
       success: false,
       message: String(error)

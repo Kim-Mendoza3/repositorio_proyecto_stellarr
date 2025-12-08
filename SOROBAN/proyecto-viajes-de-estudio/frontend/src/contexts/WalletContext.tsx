@@ -8,6 +8,7 @@ interface WalletContextType {
   isConnecting: boolean;
   error: string | null;
   freighterAvailable: boolean;
+  isCheckingFreighter: boolean;
   connectWallet: () => Promise<WalletAccount>;
   disconnectWallet: () => void;
 }
@@ -60,6 +61,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         isConnecting: wallet.isConnecting,
         error: wallet.error,
         freighterAvailable: wallet.freighterAvailable,
+        isCheckingFreighter: wallet.isCheckingFreighter,
         connectWallet: wallet.connectWallet,
         disconnectWallet: wallet.disconnectWallet,
       }}
