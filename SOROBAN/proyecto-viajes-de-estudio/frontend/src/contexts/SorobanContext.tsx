@@ -30,11 +30,16 @@ export function SorobanProvider({ children }: { children: React.ReactNode }) {
         setError(null);
 
         // Get the contract ID from env
-        const contractId = process.env.NEXT_PUBLIC_TRIPS_CONTRACT_ID;
-        const rpcUrl = process.env.NEXT_PUBLIC_STELLAR_RPC;
+        const contractId = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || process.env.NEXT_PUBLIC_TRIPS_CONTRACT_ID;
+        const rpcUrl = process.env.NEXT_PUBLIC_STELLAR_RPC_URL || process.env.NEXT_PUBLIC_SOROBAN_RPC_URL;
+        
+        console.log('📡 Soroban Config:', {
+          contractId: contractId ? '✅ Found' : '❌ Missing',
+          rpcUrl: rpcUrl ? '✅ Found' : '❌ Missing',
+        });
         
         if (!contractId) {
-          throw new Error('Contract ID not configured');
+          throw new Error('Contract ID not configured - check NEXT_PUBLIC_CONTRACT_ADDRESS env var');
         }
 
         // Create a mock contract that will call the backend APIs

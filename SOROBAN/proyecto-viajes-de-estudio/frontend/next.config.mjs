@@ -2,6 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   
+  // Disable Image Optimization on Netlify (they don't support it)
+  images: {
+    unoptimized: true,
+  },
+  
   // Enable WebAuthn/Passkey support
   async headers() {
     return [
