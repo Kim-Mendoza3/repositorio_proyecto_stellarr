@@ -38,6 +38,14 @@ export const useStellarTransaction = () => {
   const getFreighterWallet = useCallback(async (): Promise<string | null> => {
     try {
       console.log('🔍 [useStellarTransaction] Obteniendo wallet de Freighter...');
+      
+      // Primero intentar obtener del localStorage (más rápido y confiable)
+      const savedWallet = localStorage.getItem('walletAddress');
+      if (savedWallet) {
+        console.log('✅ [useStellarTransaction] Wallet obtenida del localStorage:', savedWallet.substring(0, 10) + '...');
+        return savedWallet;
+      }
+
       console.log('🔍 [useStellarTransaction] Verificando si FreighterAPI está disponible...');
       
       if (!FreighterAPI || !FreighterAPI.getAddress) {
@@ -45,12 +53,15 @@ export const useStellarTransaction = () => {
         return null;
       }
 
+      // Si no está en localStorage, intentar obtenerla de Freighter
       const publicKeyResult = await FreighterAPI.getAddress();
       console.log('🔍 [useStellarTransaction] Resultado de getAddress:', publicKeyResult);
       
       const publicKey = typeof publicKeyResult === 'string' ? publicKeyResult : publicKeyResult?.address;
       
       if (publicKey) {
+        // Guardar en localStorage para futuras llamadas
+        localStorage.setItem('walletAddress', publicKey);
         console.log('✅ [useStellarTransaction] Wallet obtenida:', publicKey.substring(0, 10) + '...');
         return publicKey;
       } else {
