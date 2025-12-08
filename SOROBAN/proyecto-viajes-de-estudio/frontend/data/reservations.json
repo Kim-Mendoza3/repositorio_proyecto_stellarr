@@ -143,5 +143,14 @@
     "amount": 300,
     "status": "pending",
     "createdAt": "2025-12-05T19:34:52.721Z"
+  },
+  {
+    "id": "reservation_1764968683511",
+    "tripId": "trip_1764968594664",
+    "clientWallet": "GCKPCZ6FOWMOC7XDLXUEBLRSDUDRS4ZTSMT665IXVY7Q52XSGV4RPLFG",
+    "companyWallet": "GD56LBGC7WGXYKJZLWJUKJG6VOWDESIG2J24R52SNSVDPQSSLNREMJE6",
+    "amount": 100,
+    "status": "pending",
+    "createdAt": "2025-12-05T21:04:43.511Z"
   }
 ]

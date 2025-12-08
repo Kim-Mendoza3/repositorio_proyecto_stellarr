@@ -74,5 +74,21 @@
     "highlights": [
       "Disneyland"
     ]
+  },
+  {
+    "id": "trip_1764968594664",
+    "companyWallet": "GD56LBGC7WGXYKJZLWJUKJG6VOWDESIG2J24R52SNSVDPQSSLNREMJE6",
+    "name": "Viaje a Tequila",
+    "destination": "Guadalajara",
+    "duration": "3",
+    "priceXLM": 100,
+    "description": "Visitar los campos de agave para aprender sobre todo el proceso de la elaboracion del Tequila",
+    "maxParticipants": 20,
+    "currentBookings": 1,
+    "status": "active",
+    "createdAt": "2025-12-05T21:03:14.707Z",
+    "highlights": [
+      "Tequila"
+    ]
   }
 ]
