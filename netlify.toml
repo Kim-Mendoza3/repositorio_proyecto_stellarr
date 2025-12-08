@@ -5,8 +5,8 @@
   # Base directory (where package.json is)
   base = "SOROBAN/proyecto-viajes-de-estudio/frontend"
   
-  # Build command
-  command = "npm run build"
+  # Build command with legacy-peer-deps to fix viem/rainbowkit conflict
+  command = "npm install --legacy-peer-deps && npm run build"
   
   # Output directory (where .next folder is)
   publish = ".next"
@@ -16,7 +16,7 @@
 
 [build.environment]
   NODE_VERSION = "20.9.0"
-  NODE_ENV = "production"
+  NODE_ENV = "development"
 
 # Environment variables for production
 [context.production.environment]
