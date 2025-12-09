@@ -163,7 +163,27 @@ export default function CompanyDashboardPage() {
       }
 
       const result = await response.json();
-      console.log(`âœ… [DASHBOARD] Viaje guardado en API exitosamente`, result);
+      console.log(`✅ [DASHBOARD] Viaje guardado en API exitosamente`, result);
+
+      // Guardar también en localStorage como respaldo (Netlify /tmp no persiste)
+      try {
+        const storageKey = `company_trips_${walletKey}`;
+        const existing = localStorage.getItem(storageKey);
+        const trips = existing ? JSON.parse(existing) : [];
+        
+        // Actualizar si ya existe, o agregar si es nuevo
+        const index = trips.findIndex((t: TripOffer) => t.id === trip.id);
+        if (index >= 0) {
+          trips[index] = trip;
+        } else {
+          trips.push(trip);
+        }
+        
+        localStorage.setItem(storageKey, JSON.stringify(trips));
+        console.log(`💾 [DASHBOARD] Viaje guardado en localStorage: ${trips.length} viajes`);
+      } catch (e) {
+        console.warn('⚠️ [DASHBOARD] No se pudo guardar en localStorage:', e);
+      }
 
       // Recargar viajes desde la API
       loadTripOffersFromAPI(walletKey);
@@ -182,16 +202,22 @@ export default function CompanyDashboardPage() {
         return;
       }
       
-      console.log(`ðŸ“‹ [DASHBOARD] Cargando viajes desde API para wallet: ${wallet.substring(0, 8)}...`);
+      console.log(`📋 [DASHBOARD] Cargando viajes desde API para wallet: ${wallet.substring(0, 8)}...`);
       const response = await fetch(`/api/trips?company=${wallet}`);
       const data = await response.json();
       
-      if (data.success) {
-        console.log(`âœ… [DASHBOARD] Viajes cargados: ${data.trips.length}`);
+      if (data.success && data.trips.length > 0) {
+        console.log(`✅ [DASHBOARD] Viajes cargados desde API: ${data.trips.length}`);
         setTripOffers(data.trips);
+        // Actualizar localStorage con datos del API
+        localStorage.setItem(`company_trips_${wallet}`, JSON.stringify(data.trips));
+      } else {
+        console.log(`📋 [DASHBOARD] API devolvió ${data.trips?.length || 0} viajes, intentando localStorage...`);
+        // Fallback a localStorage si API no tiene datos (Netlify /tmp no persiste)
+        loadTripOffers(wallet);
       }
     } catch (e) {
-      console.error('Error cargando ofertas desde API:', e);
+      console.error('❌ Error cargando ofertas desde API:', e);
       // Fallback a localStorage
       loadTripOffers(walletKey);
     }

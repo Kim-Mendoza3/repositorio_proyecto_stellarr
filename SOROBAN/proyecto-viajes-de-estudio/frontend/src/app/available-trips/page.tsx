@@ -29,13 +29,16 @@ export default function AvailableTripsPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Verificar si es cliente
+  // Verificar si está autenticado
   useEffect(() => {
     const user = getCurrentUser();
-    if (!user || user.userType !== 'client') {
+    if (!user) {
+      // No hay usuario, redirigir al login
       router.push('/login');
       return;
     }
+    // Permitir tanto clientes como empresas ver viajes
+    console.log(`✅ [AVAILABLE-TRIPS] Usuario autenticado: ${user.userType} (${user.name || user.companyName})`);
     setCurrentUser(user);
     if (account?.publicKey) {
       loadClientReservations(account.publicKey).then(res => setReservations(res));
