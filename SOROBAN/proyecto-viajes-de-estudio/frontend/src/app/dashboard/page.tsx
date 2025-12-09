@@ -74,7 +74,7 @@ export default function DashboardPage() {
             className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-all"
           >
             <LogOut className="w-5 h-5" />
-            Cerrar SesiÃ³n
+            Cerrar Sesión
           </button>
         </div>
 
@@ -84,14 +84,14 @@ export default function DashboardPage() {
           <div className="lg:col-span-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-slate-700/50 shadow-xl">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
               <Wallet className="w-6 h-6 text-stellar" />
-              InformaciÃ³n de Wallet
+              Información de Wallet
             </h2>
 
             <div className="space-y-4">
               {/* Address */}
               <div>
                 <label className="text-sm font-semibold text-gray-400 mb-2 block">
-                  DirecciÃ³n de Wallet
+                  Dirección de Wallet
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -178,7 +178,7 @@ export default function DashboardPage() {
 
             {/* Settings */}
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border border-slate-700/50 shadow-xl">
-              <h3 className="text-lg font-bold text-white mb-4">ConfiguraciÃ³n</h3>
+              <h3 className="text-lg font-bold text-white mb-4">Configuración</h3>
               <p className="text-gray-400 text-sm mb-4">
                 Administra tu perfil y preferencias.
               </p>
@@ -222,12 +222,12 @@ export default function DashboardPage() {
                     <div className="p-6">
                       <h3 className="text-lg font-bold text-white mb-2">{trip.destination}</h3>
                       <p className="text-gray-400 text-sm mb-4">
-                        {trip.description || 'Descubre este increÃ­ble destino de estudio'}
+                        {trip.description || 'Descubre este increíble destino de estudio'}
                       </p>
                       <div className="flex items-center justify-between mb-4">
                         <span className={`text-2xl font-bold text-${color.text}`}>{trip.priceXLM} XLM</span>
                         <span className={`text-xs bg-${color.border}/20 text-${color.text} px-3 py-1 rounded-full`}>
-                          {trip.duration || 3} dÃ­as
+                          {trip.duration || 3} días
                         </span>
                       </div>
                       <button 
