@@ -1,5 +1,6 @@
 # Netlify Configuration - Viajes de Estudio dApp
 # Next.js 14 + Stellar Blockchain Integration
+# Build: 2025-12-09 - EROFS graceful handling
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
